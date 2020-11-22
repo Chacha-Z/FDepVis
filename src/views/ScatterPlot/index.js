@@ -118,54 +118,30 @@ export default class ScatterPlot extends Component {
     }
     drawChart() {
         const points = this.state.data
-        const margin = 10
-        console.log(document.querySelector("#ScatterPlot").clientWidth)
-        console.log(document.querySelector("#ScatterPlot").clientHeight)
-        const width = 400
-        const height = 500
-        const innerWidth = width - margin*2
-        const innerHeight = height - margin
+        const margin = 20
+        const marginRight = 100  // 定义右边距
+        const width = document.getElementById("ScatterPlot").clientWidth
+        const height = document.getElementById("root").clientHeight*0.95*0.45 - 30
+        const innerWidth = width - margin - marginRight
+        const innerHeight = height - margin*2
 
         const svg = d3.select("#ScatterPlot")
                         .append("svg")
                         .attr("preserveAspectRatio", "xMidYMid meet")
                         .attr("viewBox", "0 0 " + width +" "+ height)
-                        // .style("background", "rgba(1,1,1,0.1)");
 
         let x = d3.scaleLinear()
             .domain([0, Math.max(...points.map(x => x[0]))])
-            .range([0,innerWidth])
+            .range([0, innerWidth])
 
         let y = d3.scaleLinear()
-            .rangeRound([0,innerHeight-margin*3])
+            .rangeRound([0, innerHeight])
             .domain([Math.max(...points.map(x => x[1])), 0])
 
         let z = d3.scaleOrdinal(d3.schemeCategory10) // 通用线条的颜色
 
         let fig = svg.append('g')
             .attr('transform', 'translate(' + 10 + ',' + 10 + ')')
-        
-        // fig.append('g')// 设置x轴
-        //     .attr('class', 'axis axis--x')
-        //     .attr('transform', 'translate(0,' + (innerHeight-margin*3) + ')')
-        //     .call(d3.axisTop(x))
-        //     .append('text')
-        //     .attr('x', innerWidth)
-        //     .attr('y', 26)
-        //     .attr('dy', '.71em')
-        //     .style('text-anchor', 'end')
-        //     .style('fill', '#000')
-        //     // .text('X-axis')
-
-        // fig.append('g') // 设置y轴
-        //     .attr('class', 'axis axis--y')
-        //     .call(d3.axisRight(y))
-        //     .append('text')
-        //     .attr('y', -16)
-        //     .attr('dy', '.71em')
-        //     .style('text-anchor', 'start')
-        //     .style('fill', '#aaa')
-        //     // .text('Y-axis')
 
         fig.append('g') // 输出点
             .selectAll('circle')
@@ -180,72 +156,52 @@ export default class ScatterPlot extends Component {
                 return z(d[2])
             })
             .attr('cx', function(d) {
-            return x(d[0])
+                return x(d[0])
             })
             .attr('cy', function(d) {
                 return y(d[1])
             })
             .attr('r', 6)
             .style('opacity',"0.6")
-            // .transition()
-            // .duration(750)
-            // .delay(function(d, i) {
-            //     return i * 10
-            // })
-            // .attr('r', 6)
        
         let legend = fig
             .append('g') // 画legend
-            // .attr('font-family', 'Times New Roman')
+            .attr('font-family', 'Arial')
             .attr('font-size', "12px")
             .attr("font-weight","500")
-            .attr('transform', 'translate(-30,0)')
+            .attr('transform', `translate(${innerWidth+margin},0)`)
             .attr('text-anchor', 'start')
             .selectAll('g')
             .data(Array.from(new Set(points.map(i => i[2]))))
             .enter()
             .append('g')
             .attr('transform', function(d, i) {
-            return 'translate(0,' + i * 24 + ')'
+                return 'translate(0,' + i * 30 + ')'
             })
 
         legend
             .append('rect')
-            .attr('x', width - 65)
+            .attr('x', 0)
             .attr('rx', 4)
             .attr('width', 19)
             .attr('height', 19)
             .attr('fill', z)
-            .style("opacity","0.9")
+            .style("opacity","0.7")
 
         legend
             .append('text')
-            .attr('x', width - 40)
-            .attr('y', 9.5)
-            .attr('dy', '0.32em')
+            .attr('x', 19+5)
+            .attr('dy', 13)
             .text(function(d) {
-                return "Family" +d
+                return "Family" + d
             })
 
-        // svg
-        //     .append('g') // 输出标题
-        //     .attr('class', 'chart--title')
-        //     .append('text')
-        //     .attr('fill', '#000')
-        //     .attr('font-size', '16px')
-        //     .attr('font-weight', '700')
-        //     .attr('text-anchor', 'middle')
-        //     .attr('x', innerWidth / 2)
-        //     .attr('y', 20)
-        //     .text('Title')
     }
     render() {
 
         return (
-            <div className="outer">
-                <div id='ScatterPlot' className='pane'>
-                    <div className='header'>Scatter Plot</div>
-                </div>
+            <div id='ScatterPlot' className='pane'>
+                <div className='header'>Scatter Plot</div>
             </div>
         )
     }

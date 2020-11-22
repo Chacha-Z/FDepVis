@@ -21,7 +21,7 @@ export default class Dashboard extends Component {
         return (
             <div>
                 <Layout style={{ height:' 95vh' }}>
-                    <Sider width={300} style={{backgroundColor:'#eee'}}>
+                    <Sider width={"30%"} >
                         <Content style={{ height: '45%' }}>
                             <ScatterPlot />
                         </Content>
@@ -46,8 +46,8 @@ export default class Dashboard extends Component {
                 <Layout  style={{ height: '5vh' }}>
                     <Footer>
                         <div style={{textAlign: "center"}}>
-                            Source Code <a href='https://github.com/sdq/react-d3-dashboard'>https://github.com/sdq/react-d3-dashboard</a>;
-                            Author <a href='https://sdq.ai'>sdq</a>;
+                            Source Code <a href='https://github.com/Chacha-Z/FDepVis'>https://github.com/Chacha-Z/FDepVis</a>;
+                            Author <a href='#'>我来取个名</a>;
                         </div>
                     </Footer>
                 </Layout>
