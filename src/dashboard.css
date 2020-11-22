@@ -1,15 +1,12 @@
-.pane {
+/* 组件容器DIV */
+.pane { 
     background: #fff;
     border-style: solid;
     border-color: #eee;
     border-width: 1px;
-    /* margin-top: 5px;
-    margin-left: 5px;
-    margin-right: 5px;
-    border-radius: 5px; */
-    /* box-shadow: 2px 2px 2px #dddddd; */
 }
 
+/* 组件标题DIV */
 .header {
     background-color: #eee;
     margin: 5px;
@@ -19,9 +16,10 @@
     height: 30px;
 }
 
-.ant-layout-footer {
+#footer {
     padding: 0 0 0 0;
     line-height: 5vh;
+    background-color: #eee;
 }
 
 

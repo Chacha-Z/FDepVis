@@ -121,7 +121,7 @@ export default class ScatterPlot extends Component {
         const margin = 20
         const marginRight = 100  // 定义右边距
         const width = document.getElementById("ScatterPlot").clientWidth
-        const height = document.getElementById("root").clientHeight*0.95*0.45 - 30
+        const height = document.getElementById("ScatterPlot").clientHeight - 30
         const innerWidth = width - margin - marginRight
         const innerHeight = height - margin*2
 
