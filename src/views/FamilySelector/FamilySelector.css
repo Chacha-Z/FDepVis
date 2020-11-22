@@ -1,8 +1,25 @@
 #FamilySelector{
     height: 100%;
     /* background-color: yellow; */
+    overflow: hidden;
 }
 
 #FamilySelector > h3 {
     margin-left: 5px;
+}
+
+.ant-table-row:hover {
+    cursor: pointer;
+}
+
+.onSelect {
+    background: rgb(252, 232, 229) !important; 
+}
+
+.onSelect:hover {
+    cursor: pointer;
+}
+
+.ant-table-tbody > tr.onSelect:hover > td {
+    background: rgb(248, 224, 219) !important; 
 }

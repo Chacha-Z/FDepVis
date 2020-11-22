@@ -2,12 +2,16 @@ import state from "./state"
 
 const reducers = (preState=state, action) => {
     switch(action.type){
-        case 'TEST_ACTION':
-            console.log('yes')
+        case 'ADD_FAMILY':
             return {
                 ...preState,
-                num: preState.num+action.value
+                selectedFamily: [...preState.selectedFamily, action.id]
             }
+        case 'REMOVE_FAMILY':
+            return {
+                ...preState,
+                selectedFamily: preState.selectedFamily.filter((d)=>{return d !== action.id})
+        }
         default:
             return {
                 ...preState

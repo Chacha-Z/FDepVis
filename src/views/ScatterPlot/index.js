@@ -117,10 +117,13 @@ export default class ScatterPlot extends Component {
     }
 
     componentDidMount(){
+        store.subscribe(()=>{
+            this.drawChart()
+        })
         this.drawChart();
-        // store.dispatch(action.testAction(1))
     }
     drawChart() {
+        d3.select("#ScatterPlot svg").remove()
         const points = this.state.data
         const margin = 20
         const marginRight = 100  // 定义右边距
@@ -173,10 +176,10 @@ export default class ScatterPlot extends Component {
             .attr('font-family', 'Arial')
             .attr('font-size', "12px")
             .attr("font-weight","500")
-            .attr('transform', `translate(${innerWidth+margin},0)`)
+            .attr('transform', `translate(${innerWidth+margin/2},0)`)
             .attr('text-anchor', 'start')
             .selectAll('g')
-            .data(Array.from(new Set(points.map(i => i[2]))))
+            .data(store.getState().selectedFamily)
             .enter()
             .append('g')
             .attr('transform', function(d, i) {
@@ -187,14 +190,14 @@ export default class ScatterPlot extends Component {
             .append('rect')
             .attr('x', 0)
             .attr('rx', 4)
-            .attr('width', 19)
-            .attr('height', 19)
+            .attr('width', 15)
+            .attr('height', 15)
             .attr('fill', z)
             .style("opacity","0.7")
 
         legend
             .append('text')
-            .attr('x', 19+5)
+            .attr('x', 15+3)
             .attr('dy', 13)
             .text(function(d) {
                 return "Family" + d

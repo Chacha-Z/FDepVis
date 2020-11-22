@@ -1,9 +1,15 @@
 
 const actions = {
-    testAction: function(value){
+    addFamily: function(id){
         return {
-            type: 'TEST_ACTION',
-            value
+            type: 'ADD_FAMILY',
+            id
+        }
+    },
+    removeFamily: function(id){
+        return {
+            type: 'REMOVE_FAMILY',
+            id
         }
     }
 }

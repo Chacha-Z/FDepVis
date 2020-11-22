@@ -21,10 +21,10 @@ export default class Dashboard extends Component {
             <div>
                 <Row style={{ height: '95vh' }}>
                     <Col span={6} style={{ height: '100%' }}>
-                        <Row style={{ height: '45%' }}>
+                        <Row style={{ height: '40%' }}>
                             <ScatterPlot />
                         </Row>
-                        <Row style={{ height: '55%' }}>
+                        <Row style={{ height: '60%' }}>
                             <FamilySelector />
                         </Row>
                     </Col>
