@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import * as d3 from "d3";
 import './ScatterPlot.css';
-import { functions } from 'lodash';
+
+// 使用redux
+import store from '../../redux/index'
+import action from '../../redux/actions'
 
 export default class ScatterPlot extends Component {
 
@@ -115,6 +118,7 @@ export default class ScatterPlot extends Component {
 
     componentDidMount(){
         this.drawChart();
+        // store.dispatch(action.testAction(1))
     }
     drawChart() {
         const points = this.state.data
