@@ -7,7 +7,6 @@ import AttributesHeatmap from './views/AttributesHeatmap';
 import RelativeCompare from './views/RelativeCompare';
 import './dashboard.css';
 
-// const { Sider, Content, Footer } = Layout;
 
 export default class Dashboard extends Component {
 
@@ -22,18 +21,18 @@ export default class Dashboard extends Component {
             <div>
                 <Row style={{ height: '95vh' }}>
                     <Col span={6} style={{ height: '100%' }}>
-                        <Row style={{ height: '50%' }}>
+                        <Row style={{ height: '45%' }}>
                             <ScatterPlot />
                         </Row>
-                        <Row style={{ height: '50%' }}>
+                        <Row style={{ height: '55%' }}>
                             <FamilySelector />
                         </Row>
                     </Col>
                     <Col span={18} style={{ height: '100%' }}>
-                        <Row style={{ height: '30%' }}>
+                        <Row style={{ height: '50%' }}>
                             <FamilyTree/>
                         </Row>
-                        <Row style={{ height: '70%' }}>
+                        <Row style={{ height: '50%' }}>
                             <Col span={12} style={{ height: '100%' }}><AttributesHeatmap /></Col>
                             <Col span={12} style={{ height: '100%' }}><RelativeCompare /></Col>
                         </Row>
