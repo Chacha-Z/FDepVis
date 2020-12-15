@@ -126,7 +126,7 @@ export default class ScatterPlot extends Component {
         d3.select("#ScatterPlot svg").remove()
         const points = this.state.data
         const margin = 20
-        const marginRight = 100  // 定义右边距
+        const marginRight = 90  // 定义右边距
         const width = document.getElementById("ScatterPlot").clientWidth
         const height = document.getElementById("ScatterPlot").clientHeight - 30
         const innerWidth = width - margin - marginRight
@@ -192,7 +192,7 @@ export default class ScatterPlot extends Component {
             .attr('rx', 4)
             .attr('width', 15)
             .attr('height', 15)
-            .attr('fill', z)
+            .attr('fill', (d, i)=>z(i+1))
             .style("opacity","0.7")
 
         legend
@@ -200,7 +200,7 @@ export default class ScatterPlot extends Component {
             .attr('x', 15+3)
             .attr('dy', 13)
             .text(function(d) {
-                return "Family" + d
+                return "F" + d
             })
 
     }

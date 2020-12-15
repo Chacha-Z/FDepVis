@@ -5,12 +5,14 @@ const reducers = (preState=state, action) => {
         case 'ADD_FAMILY':
             return {
                 ...preState,
-                selectedFamily: [...preState.selectedFamily, action.id]
+                selectedFamily: [...preState.selectedFamily, action.id],
+                focusFamily: 'family'+action.id
             }
         case 'REMOVE_FAMILY':
             return {
                 ...preState,
-                selectedFamily: preState.selectedFamily.filter((d)=>{return d !== action.id})
+                selectedFamily: preState.selectedFamily.filter((d)=>{return d !== action.id}),
+                focusFamily: 'family'+action.id
         }
         default:
             return {

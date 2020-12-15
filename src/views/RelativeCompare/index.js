@@ -15,6 +15,15 @@ export default class RelativeCompare extends Component {
                 {name:"xxxx", isDep: false},
                 {name:"xxx", isDep: false},
                 {name:"xxx", isDep: true},
+                {name:"xx", isDep: false}, 
+                {name:"xxx", isDep: false},
+                {name:"xx", isDep: true},
+                {name:"xx", isDep: false},
+                {name:"xxxx", isDep: true},
+                {name:"x", isDep: true},
+                {name:"xxxx", isDep: false},
+                {name:"xxx", isDep: false},
+                {name:"xxx", isDep: true},
                 {name:"xx", isDep: false}
             ],
             edges: [    //边集
@@ -27,7 +36,16 @@ export default class RelativeCompare extends Component {
                 {source:3,target:7,value:1},
                 {source:5,target:6,value:1.6},
                 {source:6,target:7,value:0.7},
-                {source:6,target:8,value:2}
+                {source:6,target:8,value:2},
+                {source:13,target:5,value:0.9},
+                {source:9,target:3,value:0.9},
+                {source:10,target:7,value:1},
+                {source:12,target:6,value:1.6},
+                {source:11,target:7,value:0.7},
+                {source:14,target:5,value:2},
+                {source:15,target:2,value:0.7},
+                {source:16,target:4,value:2},
+                {source:17,target:8,value:2}
             ]
         }
     }
@@ -37,15 +55,16 @@ export default class RelativeCompare extends Component {
 
 
 
+
     drawChart(){
         function ticked(){
             links
-                .attr("x1", function(d){return d.source.x;})
-                .attr("y1", function(d){return d.source.y;})
-                .attr("x2", function(d){return d.target.x;})
-                .attr("y2", function(d){return d.target.y;});
+                .attr("x1", function(d){return validateXY(d.source.x, 'x')})
+                .attr("y1", function(d){return validateXY(d.source.y, 'y')})
+                .attr("x2", function(d){return validateXY(d.target.x, 'x')})
+                .attr("y2", function(d){return validateXY(d.target.y, 'y')});
                 
-            gs.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            gs.attr("transform", function(d) { return "translate(" + validateXY(d.x, 'x') + "," + validateXY(d.y, 'y') + ")"; });
         }
     
         
@@ -66,6 +85,17 @@ export default class RelativeCompare extends Component {
             }
             d.fx = null;
             d.fy = null;
+        }
+
+        function validateXY(val, type){
+            var r = 20;
+            if(val < r) return r;
+            if(type == 'x'){
+                if(val > width - r) return width - r;
+            }else{
+                if(val > height - r) return height - 2*r;
+            }
+            return val
         }
 
         const width = document.getElementById("RelativeCompare").clientWidth

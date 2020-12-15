@@ -1,4 +1,21 @@
 #FamilyTree {
     height: 100%;
     /* background-color: green; */
+    overflow: auto;
+}
+
+.svgHolder {
+    display: inline-block;
+}
+  
+.menu1{
+    position: absolute;
+    left: 440px;
+    top: 20px;
+}
+
+.menu2{
+    position: absolute;
+    left: 1450px;
+    top: 20px;
 }
