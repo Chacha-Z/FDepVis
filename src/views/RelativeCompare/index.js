@@ -130,14 +130,14 @@ export default class RelativeCompare extends Component {
         
         //绘制边
     	var links = g.append("g")
-                    .selectAll("line")
+                    .selectAll()
                     .data(this.state.edges)
                     .enter()
                     .append("line")
                     .attr("stroke", '#bbb')
                     .attr("stroke-width", d => d.value);
         //建立用来放在每个节点和对应文字的分组<g>
-        var gs = g.selectAll(".circleText")
+        var gs = g.selectAll()
                     .data(this.state.nodes)
                     .enter()
                     .append("g")
