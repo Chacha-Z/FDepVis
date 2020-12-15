@@ -33,8 +33,8 @@ export default class Dashboard extends Component {
                             <FamilyTree/>
                         </Row>
                         <Row style={{ height: '50%' }}>
-                            <Col span={12} style={{ height: '100%' }}><AttributesHeatmap /></Col>
-                            <Col span={12} style={{ height: '100%' }}><RelativeCompare /></Col>
+                            <Col span={14} style={{ height: '100%' }}><AttributesHeatmap /></Col>
+                            <Col span={10} style={{ height: '100%' }}><RelativeCompare /></Col>
                         </Row>
                     </Col>
                 </Row>
