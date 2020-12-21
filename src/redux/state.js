@@ -56,8 +56,8 @@ const state = {
         }
         
     ],
-    focusFamily: 'family149',
-    selectedFamily: [],
+    focusFamily: 903988,
+    selectedFamily: [38, 149, 27251, 42623],
     family149: [
         {
           "name": [
@@ -20133,6 +20133,112 @@ const state = {
         "ind_deceased": "N",
         "ind_suicide": "N"
       }
+    ],
+    familytest: [
+      {
+        "name": 47083,
+        "parent": "",
+        "sex": "F",
+        "is_deceased": "Y",
+        "is_suicide": "N",
+        "group": "couple",
+        "spouse": {
+          "name": 45321,
+          "parent": "",
+          "sex": "M",
+          "is_deceased": "Y",
+          "is_suicide": "N",
+        }
+      },
+      {
+        "name": 321,
+        "parent": 47083,
+        "sex": "F",
+        "is_deceased": "Y",
+        "is_suicide": "Y",
+        "clinical_data": {
+          "alcohol": 0,
+          "psychosis": 0,
+          "anxiety-non-trauma": 0,
+          "somatic disorder": 0,
+          "bipolar spectrum illness": 0,
+          "depression": 0,
+          "interpersonal trauma": 0,
+          "PD-Cluster C-anxiety": 0,
+          "PD-Cluster B-emotional": 1,
+          "PD": 0,
+          "Impulse control disorder": 2,
+          "obesity": 0,
+          "cardiovascular": 0,
+          "COPD": 0,
+          "asthma": 0,
+          "immune-autoimmune": 0
+        },
+        "group": "couple",
+        "spouse": {
+          "name": 45321,
+          "parent": "",
+          "sex": "M",
+          "is_deceased": "Y",
+          "is_suicide": "N",
+          "clinical_data": {
+            "alcohol": 0,
+            "psychosis": 0,
+            "anxiety-non-trauma": 1,
+            "somatic disorder": 0,
+            "bipolar spectrum illness": 0,
+            "depression": 2,
+            "interpersonal trauma": 0,
+            "PD-Cluster C-anxiety": 1,
+            "PD-Cluster B-emotional": 2,
+            "PD": 0,
+            "Impulse control disorder": 0,
+            "obesity": 0,
+            "cardiovascular": 0,
+            "COPD": 0,
+            "asthma": 0,
+            "immune-autoimmune": 2
+          },
+        },
+      },
+      {
+        "name": 123,
+        "parent": 47083,
+        "sex": "M",
+        "is_deceased": "Y",
+        "is_suicide": "N",
+        "group": "couple",
+        "spouse": {
+          "name": 999,
+          "parent": "",
+          "sex": "M",
+          "is_deceased": "Y",
+          "is_suicide": "N",
+        }
+      },
+      {
+        "name": 222,
+        "parent": 123,
+        "sex": "M",
+        "is_deceased": "N",
+        "is_suicide": "N",
+        "group": "couple",
+        "spouse": {
+          "name": 999,
+          "parent": "",
+          "sex": "M",
+          "is_deceased": "Y",
+          "is_suicide": "Y",
+        }
+      },
+      {
+        "name": 333,
+        "parent": 123,
+        "sex": "M",
+        "is_deceased": "Y",
+        "is_suicide": "N",
+        "group": "individual",
+      },
     ]
     
 }

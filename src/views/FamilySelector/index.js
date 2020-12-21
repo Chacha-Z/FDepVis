@@ -70,6 +70,9 @@ export default class FamilySelector extends Component {
                             }
                         };
                     }}
+                    rowClassName={record => {
+                        return  store.getState().selectedFamily.indexOf(record.key) !== -1 ? 'onSelect' : '';
+                    }}
                     dataSource={this.state.dataSource} columns={this.state.columns} size='small'
                     pagination={{
                         hideOnSinglePage: true,

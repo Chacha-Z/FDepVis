@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as d3 from "d3";
 import './ScatterPlot.css';
+import axios from 'axios';
 
 // 使用redux
 import store from '../../redux/index'
@@ -120,11 +121,30 @@ export default class ScatterPlot extends Component {
         store.subscribe(()=>{
             this.drawChart()
         })
-        this.drawChart();
+        this.uploadData()
+    }
+    
+    uploadData() {
+        const _this = this;
+        axios.get("http://106.52.126.175/api/getTsneview/"
+        ).then((res) => {
+            console.log(res);
+            let data = res.data;
+
+            _this.setState(
+                {
+                    data: data
+                }, () => {
+                    // console.log(this.state);
+                    _this.drawChart();
+                })
+        })
+        
     }
     drawChart() {
+        var selectedF = store.getState().selectedFamily;
         d3.select("#ScatterPlot svg").remove()
-        const points = this.state.data
+        const points = this.state.data.filter(d=>selectedF.indexOf(d.fid) !== -1)
         const margin = 20
         const marginRight = 90  // 定义右边距
         const width = document.getElementById("ScatterPlot").clientWidth
@@ -138,14 +158,16 @@ export default class ScatterPlot extends Component {
                         .attr("viewBox", "0 0 " + width +" "+ height)
 
         let x = d3.scaleLinear()
-            .domain([0, Math.max(...points.map(x => x[0]))])
+            .domain([0, Math.max(...points.map(d => d.x))])
             .range([0, innerWidth])
 
         let y = d3.scaleLinear()
             .rangeRound([0, innerHeight])
-            .domain([Math.max(...points.map(x => x[1])), 0])
+            .domain([Math.max(...points.map(d => d.y)), 0])
 
-        let z = d3.scaleOrdinal(d3.schemeCategory10) // 通用线条的颜色
+        let z = d3.scaleOrdinal()
+                .domain(["38", "149", "27251", "42623", "68939", "176860", "603481", "791533", "903988"])
+                .range(['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6'])
 
         let fig = svg.append('g')
             .attr('transform', 'translate(' + 10 + ',' + 10 + ')')
@@ -160,13 +182,13 @@ export default class ScatterPlot extends Component {
             // .on('mouseover', tip.show)
             // .on('mouseout', tip.hide)
             .attr('fill', function(d) {
-                return z(d[2])
+                return z(d.fid)
             })
             .attr('cx', function(d) {
-                return x(d[0])
+                return x(d.x)
             })
             .attr('cy', function(d) {
-                return y(d[1])
+                return y(d.y)
             })
             .attr('r', 6)
             .style('opacity',"0.6")
@@ -176,29 +198,29 @@ export default class ScatterPlot extends Component {
             .attr('font-family', 'Arial')
             .attr('font-size', "12px")
             .attr("font-weight","500")
-            .attr('transform', `translate(${innerWidth+margin/2},0)`)
+            .attr('transform', `translate(${innerWidth+(margin/2)+10},0)`)
             .attr('text-anchor', 'start')
             .selectAll('g')
             .data(store.getState().selectedFamily)
             .enter()
             .append('g')
             .attr('transform', function(d, i) {
-                return 'translate(0,' + i * 30 + ')'
+                return 'translate(0,' + i * 25 + ')'
             })
 
         legend
             .append('rect')
             .attr('x', 0)
             .attr('rx', 4)
-            .attr('width', 15)
-            .attr('height', 15)
-            .attr('fill', (d, i)=>z(i+1))
+            .attr('width', 12)
+            .attr('height', 12)
+            .attr('fill', z)
             .style("opacity","0.7")
 
         legend
             .append('text')
-            .attr('x', 15+3)
-            .attr('dy', 13)
+            .attr('x', 18)
+            .attr('dy', 10)
             .text(function(d) {
                 return "F" + d
             })
