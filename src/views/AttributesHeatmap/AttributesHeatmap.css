@@ -10,6 +10,7 @@
     overflow: auto;
 }
 
+
 .heatmap-tooltip {
     position: absolute;
     /* width: 60px;
@@ -20,6 +21,7 @@
     border-radius: 8px;
     padding: 2px;
     text-align: center;
+    overflow: auto;
   }
 
 

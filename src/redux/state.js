@@ -56,7 +56,8 @@ const state = {
         }
         
     ],
-    focusFamily: 903988,
+    //focusFamily: 903988,
+    focusFamily: 68939,
     selectedFamily: [38, 149, 27251, 42623],
     family149: [
         {
