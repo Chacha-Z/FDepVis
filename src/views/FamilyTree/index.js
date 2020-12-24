@@ -248,7 +248,7 @@ export default class FamilyTree extends Component {
                         .style('opacity', .7)
                     let html = '';
 
-                    
+                    console.log(d3.entries(d.data))
 
                     let coordinates = d3.mouse(container);
                     $tooltip.html(html)

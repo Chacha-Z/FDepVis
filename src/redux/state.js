@@ -58,8 +58,7 @@ const state = {
     ],
     focusFamily: 42623,
     selectedFamily: [38, 149, 27251, 42623],
-  
-    
+
 }
 
 export default state;
