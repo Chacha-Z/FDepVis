@@ -139,7 +139,6 @@ export default class ScatterPlot extends Component {
                     _this.drawChart();
                 })
         })
-        
     }
     drawChart() {
         var selectedF = store.getState().selectedFamily;
@@ -172,6 +171,8 @@ export default class ScatterPlot extends Component {
         let fig = svg.append('g')
             .attr('transform', 'translate(' + 10 + ',' + 10 + ')')
 
+        let $tooltip = d3.select('.plot-tooltip')
+        // console.log(points)
         fig.append('g') // 输出点
             .selectAll('circle')
             // .attr('class', 'points')
@@ -192,6 +193,27 @@ export default class ScatterPlot extends Component {
             })
             .attr('r', 6)
             .style('opacity',"0.6")
+            .on('mouseover', function(d){
+                d3.select(this)
+                    .style('opacity', 1)
+
+                $tooltip.transition()
+                    .duration(100)
+                    .style('opacity', .7)
+
+                let coordinates = d3.mouse(this);
+                $tooltip.html( 'fID:  ' + d.id + '<br/> '+ 'ID: ' + d.fid + '<br/> ' + 'pID: ' + d.pid)
+                    .style('left', (coordinates[0]+10)+'px')
+                    .style('top', (coordinates[1])+'px')
+            })	
+            .on("mouseout", function(d) {
+                d3.select(this)
+                    .style('opacity', 0.6)
+                
+                $tooltip.transition()		
+                        .duration(200)		
+                        .style("opacity", 0);	
+            })
        
         let legend = fig
             .append('g') // 画legend
@@ -207,15 +229,34 @@ export default class ScatterPlot extends Component {
             .attr('transform', function(d, i) {
                 return 'translate(0,' + i * 25 + ')'
             })
-
+            .on('click', d=>{
+                store.dispatch(action.selectFamily(d))
+            })
+            .attr('cursor', 'pointer')
+        
+        
+        var focusFamily = store.getState().focusFamily;
+        legend.each(function(d){
+            if(d === focusFamily){
+                d3.select(this)
+                    .append('rect')
+                    .style("fill", '#bbb')
+                    .attr('width', 75)
+                    .attr('height', 20)
+                    .style("opacity", '0.7')
+                    .attr('rx', 5)
+                    .attr('x', -5)
+                    .attr('y', -4)
+                    .style("stroke-width", 0.5);
+            }
+        })
         legend
-            .append('rect')
-            .attr('x', 0)
-            .attr('rx', 4)
-            .attr('width', 12)
-            .attr('height', 12)
+            .append('circle')
+            .attr('r', 6)
+            .attr('cx', 6)
+            .attr('cy', 6)
             .attr('fill', z)
-            .style("opacity","0.7")
+            .style("opacity", d=>d === focusFamily? '1': '0.7')
 
         legend
             .append('text')
@@ -224,6 +265,7 @@ export default class ScatterPlot extends Component {
             .text(function(d) {
                 return "F" + d
             })
+            .attr('fill', d=> d === focusFamily? '#fff': '#000')
 
     }
     render() {
@@ -231,6 +273,7 @@ export default class ScatterPlot extends Component {
         return (
             <div id='ScatterPlot' className='pane'>
                 <div className='header'>Scatter Plot</div>
+                <div class='plot-tooltip'></div>
             </div>
         )
     }
