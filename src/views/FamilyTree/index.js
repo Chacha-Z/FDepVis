@@ -215,6 +215,8 @@ export default class FamilyTree extends Component {
               .attr("stroke", "#999")
               .style("stroke-width", .5);
 
+          let $tooltip = d3.select('.tree-tooltip')
+          let container = d3.select('#FamilyTree').node()
           node  // 针对自杀且有临床属性数据的，使用饼图进行绘制
               .selectAll('g.personRadial').data(d => {
                 let datainput=[];
@@ -237,11 +239,28 @@ export default class FamilyTree extends Component {
                   return `translate(${x}, ${y})`
                 })
                 .attr('cursor', 'pointer')
-                .on('mouseover',function(){
+                .on('mouseover',function(d){
                     d3.select(this.parentNode).moveToFront();
                     d3.select(this).select('g').attr('transform','scale(4)');
+                    $tooltip.transition()
+                        .duration(100)
+
+                        .style('opacity', .7)
+                    let html = '';
+
+                    
+
+                    let coordinates = d3.mouse(container);
+                    $tooltip.html(html)
+                        .style('left', (coordinates[0]+10)+'px')
+                        .style('top', (coordinates[1]-200)+'px')
+
                 }).on('mouseout',function(){
                     d3.select(this).select('g').attr('transform','scale(1)');
+                    
+                    $tooltip.transition()		
+                            .duration(200)		
+                            .style("opacity", 0);	
                 })
                 .each(function(d){
                     // 画饼图
@@ -340,6 +359,7 @@ export default class FamilyTree extends Component {
         return (
             <div id='FamilyTree' className='pane' >
                 <div className='header'>Family Tree : F{this.state.focusFamily}</div>
+                <div class='tree-tooltip'></div>
             </div>
         )
     }
