@@ -22,7 +22,7 @@ const reducers = (preState=state, action) => {
         case 'SELECT_PERSON':
             return {
                 ...preState,
-                focusPerson: action.id
+                focusPID: action.id
             }
         default:
             return {
