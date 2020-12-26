@@ -4,7 +4,7 @@ import ScatterPlot from './views/ScatterPlot';
 import FamilySelector from './views/FamilySelector';
 import FamilyTree from './views/FamilyTree';
 import AttributesHeatmap from './views/AttributesHeatmap';
-import RelativeCompare from './views/RelativeCompare';
+import DetailInfo from './views/DetailInfo';
 import './dashboard.css';
 
 
@@ -34,7 +34,7 @@ export default class Dashboard extends Component {
                         </Row>
                         <Row style={{ height: '40%' }}>
                             <Col span={12} style={{ height: '100%' }}><AttributesHeatmap /></Col>
-                            <Col span={12} style={{ height: '100%' }}><RelativeCompare /></Col>
+                            <Col span={12} style={{ height: '100%' }}><DetailInfo /></Col>
                         </Row>
                     </Col>
                 </Row>

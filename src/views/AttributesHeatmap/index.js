@@ -43,7 +43,6 @@ export default class AttributesHeatmap extends Component {
     }
 
     componentDidMount() {
-        const _this = this;
         store.subscribe(() => {
             this.uploadData()
         })
@@ -221,8 +220,7 @@ export default class AttributesHeatmap extends Component {
         //.attr("transform", "translate(10,150)")
 
         const svg1 = d3.select("#BarChart").append('svg')
-            .attr("width", width).attr("height", height1)
-            .attr('id', 'bars')
+            .attr("width", width).attr("height", height1 + 5)
 
         //let axisWidth = width - margin.left - margin.right - 70
 
@@ -235,7 +233,7 @@ export default class AttributesHeatmap extends Component {
             .ticks(17);//设置刻度数目 当使用 band 和 point 比例尺时没有作用 
 
         let xAxis = svg1.append("g")
-            .attr("transform", `translate(50, ${height1-9})`)
+            .attr('transform', `translate(45, ${height1 })`)
             .call(axis)
 
         const yScale = d3.scaleLinear()
@@ -255,6 +253,9 @@ export default class AttributesHeatmap extends Component {
 
         const rectPadding = 20;//矩形之间的间隙
         let container = d3.select("#AttributesHeatmap").node()
+        let container1 = d3.select("#BarChart").node()
+        let container2 = d3.select("#Heatmap").node()
+
 
         gs.append("rect")
             .attr("x", function (d, i) {
@@ -263,7 +264,8 @@ export default class AttributesHeatmap extends Component {
             })
             .attr("y", function (d) {
                 //console.log(yScale(d));
-                return yScale(d)-9;
+                return yScale(d);
+                //return yScale(d + 10);
             })
             .attr("width", function () {
                 return gridSize - rectPadding / 2;
@@ -274,7 +276,7 @@ export default class AttributesHeatmap extends Component {
             })
             .attr("fill", "#91c0db")
             .on("mousemove", function (d, i) {
-                let coordinates = d3.mouse(container);
+                let coordinates = d3.mouse(container1);
                 tooltip.style("left", (coordinates[0] + 10) + 'px')
                     .style("top", (coordinates[1] + 10) + 'px')
                     .style("display", "inline-block")
@@ -358,12 +360,12 @@ export default class AttributesHeatmap extends Component {
             .style("fill", function (d) { return color(d.times); })
 
             .on("mousemove", function (d, i) {
-                let coordinates = d3.mouse(container);
+                let coordinates = d3.mouse(container2);
                // let coordinates = this.setMouse(d3.mouse(this))
                 // console.log(coordinates)
                 
                 tooltip.style("left", (coordinates[0] + 10) + 'px')
-                    .style("top", (coordinates[1] + 10) + 'px')
+                    .style("top", (coordinates[1] + 150) + 'px')
                     .style("display", "inline-block")
                     .html(_this.state.attrs[d.col] + "<br>" + d.times)
                     .style("opacity", .9);
