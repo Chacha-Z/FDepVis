@@ -56,7 +56,7 @@ export default class AttributesHeatmap extends Component {
         axios.get("http://106.52.126.175/api/getAttrview/" + '?fid=' + focusFamily
         ).then((res) => {
             let data = res.data;
-            console.log("attr", data)
+            // console.log("attr", data)
             this.setData(data)
             document.getElementById("BarChart").innerHTML = ''
             document.getElementById("Heatmap").innerHTML = ''
@@ -80,7 +80,7 @@ export default class AttributesHeatmap extends Component {
     }
 
     setData(data) {
-        console.log(data)
+        // console.log(data)
         let row = 0;
         let myData = []
         let allCount = []
@@ -122,7 +122,7 @@ export default class AttributesHeatmap extends Component {
             //break;
         }
 
-        console.log(myData)
+        // console.log(myData)
 
         let data_count
         // 柱状图统计
@@ -136,10 +136,10 @@ export default class AttributesHeatmap extends Component {
             });
 
         }
-        console.log(data_count)
+        // console.log(data_count)
 
         let allTimes = Object.values(data_count).map(value => value) //对象的值映射，对象变数组
-        console.log(allTimes) //
+        // console.log(allTimes) //
 
         this.setState({
             values: myData,
@@ -150,7 +150,7 @@ export default class AttributesHeatmap extends Component {
 
     drawChart() {
 
-        console.log(this.state.values)
+        // console.log(this.state.values)
         const _this = this;
         const width = document.getElementById("AttributesHeatmap").clientWidth
         // const height = document.getElementById("AttributesHeatmap").clientHeight - 30
@@ -167,7 +167,7 @@ export default class AttributesHeatmap extends Component {
         //let maxTimes = Math.max.apply(Math,this.state.allTimes.map(item => {return item.times}))
 
         let times = this.state.values.map(item => { return item.times })
-        console.log(d3.max(times))
+        // console.log(d3.max(times))
 
         //颜色
         const color = d3.scaleLinear()
@@ -187,15 +187,17 @@ export default class AttributesHeatmap extends Component {
         const height2 = height1 * 2 - 20;
         const svg2 = d3.select("#BarChart").append('svg')
             .attr("width", width).attr("height", height2)
+            .attr('id', 'barlabel')
+            .attr('transform', `translate(0, 0)`)
 
         const text_g = svg2.append("g")
-            .attr("transform", "translate(12,16)");
+            // .attr("transform", "translate(12,16)");
 
         let attrLabels = text_g.selectAll(".attrLabels")
             .data(this.state.attrs)
             .enter()
             .append("g")
-            .attr('transform', (d, i) => `translate(${i * gridSize + 50}, ${height2 - 15})`) // 直接transform <g>
+            .attr('transform', (d, i) => `translate(${i * gridSize + 50}, ${height2})`) // 直接transform <g>
 
         attrLabels.append("text")
             .text(d => d)
@@ -220,6 +222,7 @@ export default class AttributesHeatmap extends Component {
 
         const svg1 = d3.select("#BarChart").append('svg')
             .attr("width", width).attr("height", height1)
+            .attr('id', 'bars')
 
         //let axisWidth = width - margin.left - margin.right - 70
 
@@ -232,7 +235,7 @@ export default class AttributesHeatmap extends Component {
             .ticks(17);//设置刻度数目 当使用 band 和 point 比例尺时没有作用 
 
         let xAxis = svg1.append("g")
-            .attr('transform', `translate(45, ${height1 - 5})`)
+            .attr("transform", `translate(50, ${height1-9})`)
             .call(axis)
 
         const yScale = d3.scaleLinear()
@@ -240,33 +243,33 @@ export default class AttributesHeatmap extends Component {
             .range([height1, 0]);
 
         const g = svg1.append("g")
-            .attr("transform", "translate(42,0)");
+            .attr("transform", "translate(50,0)");
 
-        console.log(this.state.allTimes)
+        // console.log(this.state.allTimes)
         const gs = g.selectAll(".bar")
             .data(this.state.allTimes)
             .enter()
             .append("g")
+            .attr('class', 'bar')
 
 
         const rectPadding = 20;//矩形之间的间隙
         let container = d3.select("#AttributesHeatmap").node()
 
-
         gs.append("rect")
             .attr("x", function (d, i) {
                 //console.log(d, i)
-                return i * gridSize + rectPadding / 2;
+                return i * gridSize + rectPadding / 2 -6;
             })
             .attr("y", function (d) {
                 //console.log(yScale(d));
-                return yScale(d + 10);
+                return yScale(d)-9;
             })
             .attr("width", function () {
                 return gridSize - rectPadding / 2;
             })
             .attr("height", function (d) {
-                console.log(height1 - yScale(d));
+                // console.log(height1 - yScale(d));
                 return height1 - yScale(d);
             })
             .attr("fill", "#91c0db")
@@ -287,6 +290,7 @@ export default class AttributesHeatmap extends Component {
 
         const svg = d3.select("#Heatmap").append('svg')
             .attr("width", width).attr("height", height)
+            .attr('id', 'heatmap')
 
 
 
@@ -313,34 +317,40 @@ export default class AttributesHeatmap extends Component {
         //     .style("text-anchor", "middle")
         //     .attr("transform", "translate(60, 12)")
 
-        const nameLabels = svg.selectAll(".nameLabel")
+        const nameLabels = svg.append('g')
+            .attr('class', 'nameLabel')
+            .attr("transform", "translate(5, " + (5 + gridSize / 2) + ")")
+            .selectAll("text")
             .data(this.state.names)
-            .enter().append("text")
+            .enter()
+            .append("text")
             .text(d => d)
             .attr("x", 0)
             .attr("y", function (d, i) { return i * gridSize; })
             .attr("font-size", "8.5pt")
             //.attr("fill", "#aaa")
             .attr("fill", "#595959")
-            .attr("transform", "translate(5, " + (5 + gridSize / 2) + ")")
 
 
 
-        const cards = svg.selectAll(".attr")
+        const cards = svg.append('g')
+            .attr("transform", "translate(30,5)")
+            .attr('class', 'heatcards')
+            .selectAll("rect")
             .data(this.state.values)
+            .enter()
 
         //console.log(cards)
 
         //  .enter().append("rect")
 
 
-        const cardsEnter = cards.enter().append("rect")
+        const cardsEnter = cards.append("rect")
             .attr("x", function (d) {
                 //console.log(d);
                 return 20 + (d.col) * gridSize;
             })
             .attr("y", function (d) { return (d.row) * gridSize; })
-            .attr("transform", "translate(30,5)")
             .attr("rx", 4)
             .attr("ry", 4)
             .attr("width", gridSize - 5)
@@ -350,14 +360,14 @@ export default class AttributesHeatmap extends Component {
             .on("mousemove", function (d, i) {
                 let coordinates = d3.mouse(container);
                // let coordinates = this.setMouse(d3.mouse(this))
-                console.log(coordinates)
+                // console.log(coordinates)
                 
                 tooltip.style("left", (coordinates[0] + 10) + 'px')
                     .style("top", (coordinates[1] + 10) + 'px')
                     .style("display", "inline-block")
                     .html(_this.state.attrs[d.col] + "<br>" + d.times)
                     .style("opacity", .9);
-            console.log(tooltip)
+            // console.log(tooltip)
                 })
             .on("mouseout", function (d) { tooltip.style("display", "none").style("opacity", 0); });
 
@@ -375,7 +385,7 @@ export default class AttributesHeatmap extends Component {
 
                 <div className='heatmap-tooltip' style={{ opacity: 0 }}></div>
 
-                <div id='BarChart'> </div>
+                <div id='BarChart'></div>
 
                 <div id='Heatmap'></div>
                 {/* <BarChart data={data} width={1000} height={550}/> */}

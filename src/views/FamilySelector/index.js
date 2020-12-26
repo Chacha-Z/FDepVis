@@ -33,9 +33,27 @@ export default class FamilySelector extends Component {
     componentDidMount(){
         this.setState({
             dataSource: store.getState().familyInfo
+        }, ()=>{
+            this.setFocus();
         });
+        store.subscribe(()=>{
+            this.setFocus();
+        })
     }
 
+    setFocus(){
+        let focusFamily = store.getState().focusFamily;
+        let nodes = document.getElementsByClassName('ant-table-row');
+        console.log(nodes)
+        for(var i = 0; i < nodes.length; i++){
+            let key = nodes[i].getAttribute('data-row-key')
+            if(key == focusFamily){
+                nodes[i].classList.add('onFocus')
+            }else{
+                nodes[i].classList.remove('onFocus')
+            }
+        }
+    }
     onRowClick(e){
         console.log(e)
     }
@@ -60,12 +78,18 @@ export default class FamilySelector extends Component {
                             onClick: event => {
                                 console.log(record)
                                 let node = this.getElementByAttr('tr', 'data-row-key', record.key)[0];
-                                if(node.getAttribute('class').indexOf('onSelect') == -1){
+                                let nclasses = node.getAttribute('class');
+                                if(nclasses.indexOf('onSelect') == -1){ // 未选中 - 选中
                                     node.classList.add('onSelect')
-                                    store.dispatch(action.addFamily(record.ID))
-                                }else{
-                                    node.classList.remove('onSelect')
-                                    store.dispatch(action.removeFamily(record.ID))
+                                    store.dispatch(action.addFamily(record.ID)) 
+                                }else{                                  // 选中
+                                    if(nclasses.indexOf('onFocus') == -1){  // 选中，但未focus - focus
+                                        node.classList.add('onFocus')
+                                        store.dispatch(action.selectFamily(record.ID))
+                                    }else{
+                                        node.classList.remove('onSelect')   // 选中，且focus - 取消选中
+                                        store.dispatch(action.removeFamily(record.ID))
+                                    }
                                 }
                             }
                         };

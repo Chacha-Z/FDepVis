@@ -128,7 +128,7 @@ export default class ScatterPlot extends Component {
         const _this = this;
         axios.get("http://106.52.126.175/api/getTsneview/"
         ).then((res) => {
-            console.log(res);
+            // console.log(res);
             let data = res.data;
 
             _this.setState(
@@ -202,7 +202,7 @@ export default class ScatterPlot extends Component {
                     .style('opacity', .7)
 
                 let coordinates = d3.mouse(this);
-                $tooltip.html( 'fID:  ' + d.id + '<br/> '+ 'ID: ' + d.fid + '<br/> ' + 'pID: ' + d.pid)
+                $tooltip.html( 'Family ID:  ' + d.fid + '<br/>'  + 'Persion ID: ' + d.pid)
                     .style('left', (coordinates[0]+10)+'px')
                     .style('top', (coordinates[1])+'px')
             })	
@@ -213,6 +213,10 @@ export default class ScatterPlot extends Component {
                 $tooltip.transition()		
                         .duration(200)		
                         .style("opacity", 0);	
+            })
+            .on('click', function(d){
+                store.dispatch(action.selectFamily(d.fid))
+                store.dispatch(action.selectPerson(d.pid))
             })
        
         let legend = fig

@@ -19,6 +19,11 @@ const reducers = (preState=state, action) => {
                 ...preState,
                 focusFamily: action.id
             }
+        case 'SELECT_PERSON':
+            return {
+                ...preState,
+                focusPerson: action.id
+            }
         default:
             return {
                 ...preState
