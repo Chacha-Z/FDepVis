@@ -56,12 +56,9 @@ const state = {
         }
         
     ],
-<<<<<<< HEAD
     //focusFamily: 903988,
     focusFamily: 68939,
-=======
-    focusFamily: 42623,
->>>>>>> e6c5d0a11dd6069375acce391b4a89bad2bf1dc9
+    focusPID: 133,
     selectedFamily: [38, 149, 27251, 42623],
   
     

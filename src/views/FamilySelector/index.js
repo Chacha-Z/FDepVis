@@ -78,7 +78,7 @@ export default class FamilySelector extends Component {
                         hideOnSinglePage: true,
                         defaultPageSize: 10
                     }}
-                />;
+                />
             </div>
         )
     }

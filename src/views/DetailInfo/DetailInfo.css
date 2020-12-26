@@ -1,0 +1,14 @@
+#DetailInfo {
+    height: 100%;
+    /* background-color: blueviolet; */
+}
+
+.ant-descriptions-item-label {
+    font-weight: normal;
+    font-size: 15px;
+
+}
+
+.ant-descriptions-row > td {
+    padding-bottom: 4px;
+}
