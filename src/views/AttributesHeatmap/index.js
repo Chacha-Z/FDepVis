@@ -280,11 +280,10 @@ export default class AttributesHeatmap extends Component {
                 let coordinates = d3.mouse(container1);
                 tooltip.style("left", (coordinates[0] + 10) + 'px')
                     .style("top", (coordinates[1] + 10) + 'px')
-                    .style("display", "inline-block")
                     .html(_this.state.attrs[i] + "<br>" + "sum:" + d)
                     .style("opacity", .9);
             })
-            .on("mouseout", function (d) { tooltip.style("display", "none").style("opacity", 0); });
+            .on("mouseout", function (d) { tooltip.style("opacity", 0); });
 
 
 
@@ -367,12 +366,11 @@ export default class AttributesHeatmap extends Component {
                 
                 tooltip.style("left", (coordinates[0] + 10) + 'px')
                     .style("top", (coordinates[1] + 150) + 'px')
-                    .style("display", "inline-block")
-                    .html(_this.state.attrs[d.col] + "<br>" + d.times)
+                    .html(_this.state.attrs[d.col] + ": " + d.times)
                     .style("opacity", .9);
             // console.log(tooltip)
                 })
-            .on("mouseout", function (d) { tooltip.style("display", "none").style("opacity", 0); });
+            .on("mouseout", function (d) { tooltip.style("opacity", 0); });
 
         // console.log(heatmap)
     }
@@ -387,12 +385,11 @@ export default class AttributesHeatmap extends Component {
 
             <div id='AttributesHeatmap' className='pane' >
               
-                <div className='heatmap-tooltip' style={{ opacity: 0 }}></div>
+                <div className='heatmap-tooltip'></div>
 
                 <div id='BarChart'></div>
 
                 <div id='Heatmap' style={{overflowX : "hidden"}}></div>
-                {/* <BarChart data={data} width={1000} height={550}/> */}
 
             </div>
         </>

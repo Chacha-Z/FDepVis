@@ -201,7 +201,7 @@ export default class FamilyTree extends Component {
 
                   $tooltip.html(html)
                       .style('left', (coordinates[0]-20)+'px')
-                      .style('top', (coordinates[1])+'px')
+                      .style('top', (coordinates[1]+60)+'px')
 
               }).on('mouseout',function(){
                   
@@ -283,7 +283,7 @@ export default class FamilyTree extends Component {
                     // console.log(coordinates)
                     $tooltip.html(html)
                         .style('left', (coordinates[0]-20)+'px')
-                        .style('top', (coordinates[1]-count*15)+'px')
+                        .style('top', (coordinates[1]-count*15+60)+'px')
 
                 }).on('mouseout',function(){
                     d3.select(this).select('g').attr('transform','scale(1)');
