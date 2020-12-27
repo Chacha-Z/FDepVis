@@ -187,7 +187,7 @@ export default class AttributesHeatmap extends Component {
         const svg2 = d3.select("#BarChart").append('svg')
             .attr("width", width).attr("height", height2)
             .attr('id', 'barlabel')
-            .attr('transform', `translate(0, 0)`)
+           // .attr('transform', `translate(0, 0)`)
 
         const text_g = svg2.append("g")
             // .attr("transform", "translate(12,16)");
@@ -196,7 +196,7 @@ export default class AttributesHeatmap extends Component {
             .data(this.state.attrs)
             .enter()
             .append("g")
-            .attr('transform', (d, i) => `translate(${i * gridSize + 50}, ${height2})`) // 直接transform <g>
+            .attr('transform', (d, i) => `translate(${i * gridSize + width*0.11}, ${height2})`) // 直接transform <g>
 
         attrLabels.append("text")
             .text(d => d)
@@ -224,7 +224,8 @@ export default class AttributesHeatmap extends Component {
 
         //let axisWidth = width - margin.left - margin.right - 70
 
-        let axisWidth = width - 70
+        //let axisWidth = width - 70
+        let axisWidth = width*0.87
         let xScale = d3.scaleLinear()
             .domain([0, 17])
             .range([0, axisWidth])
@@ -233,7 +234,7 @@ export default class AttributesHeatmap extends Component {
             .ticks(17);//设置刻度数目 当使用 band 和 point 比例尺时没有作用 
 
         let xAxis = svg1.append("g")
-            .attr('transform', `translate(45, ${height1 })`)
+            .attr('transform', `translate(${width*0.085}, ${height1 })`)
             .call(axis)
 
         const yScale = d3.scaleLinear()
@@ -241,7 +242,7 @@ export default class AttributesHeatmap extends Component {
             .range([height1, 0]);
 
         const g = svg1.append("g")
-            .attr("transform", "translate(50,0)");
+            .attr("transform", `translate(${width*0.092}, 0)`);
 
         // console.log(this.state.allTimes)
         const gs = g.selectAll(".bar")
@@ -251,7 +252,7 @@ export default class AttributesHeatmap extends Component {
             .attr('class', 'bar')
 
 
-        const rectPadding = 20;//矩形之间的间隙
+        const rectPadding = width*0.015;//矩形之间的间隙 20
         let container = d3.select("#AttributesHeatmap").node()
         let container1 = d3.select("#BarChart").node()
         let container2 = d3.select("#Heatmap").node()
@@ -260,7 +261,7 @@ export default class AttributesHeatmap extends Component {
         gs.append("rect")
             .attr("x", function (d, i) {
                 //console.log(d, i)
-                return i * gridSize + rectPadding / 2 -6;
+                return i * gridSize + rectPadding / 2 - width*0.006;
             })
             .attr("y", function (d) {
                 //console.log(yScale(d));
@@ -268,7 +269,7 @@ export default class AttributesHeatmap extends Component {
                 //return yScale(d + 10);
             })
             .attr("width", function () {
-                return gridSize - rectPadding / 2;
+                return gridSize / 1.6;
             })
             .attr("height", function (d) {
                 // console.log(height1 - yScale(d));
@@ -349,8 +350,8 @@ export default class AttributesHeatmap extends Component {
 
         const cardsEnter = cards.append("rect")
             .attr("x", function (d) {
-                //console.log(d);
-                return 20 + (d.col) * gridSize;
+                //console.log(d); 20 +
+                return width*0.038 + (d.col) * gridSize;
             })
             .attr("y", function (d) { return (d.row) * gridSize; })
             .attr("rx", 4)

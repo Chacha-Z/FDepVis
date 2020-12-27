@@ -12,3 +12,7 @@
 .ant-descriptions-row > td {
     padding-bottom: 4px;
 }
+
+.ant-descriptions-title {
+    margin-bottom: 10px;
+}

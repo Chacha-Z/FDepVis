@@ -14,12 +14,13 @@ export default class FamilyTree extends Component {
     }
   }
   componentDidMount(){
+    this.makeKey()
     store.subscribe(()=>{
         this.uploadData()
     })
     this.uploadData();
   }
-      
+  
   uploadData() {
     
     const focusFamily = store.getState().focusFamily
@@ -38,7 +39,7 @@ export default class FamilyTree extends Component {
 
         // console.log('drawHorPro')
         const width = document.getElementById("FamilyTree").clientWidth
-        const height = document.getElementById("FamilyTree").clientHeight-45
+        const height = document.getElementById("FamilyTree").clientHeight-45-60
     
         var graphicOpt = {
           width: width,
@@ -62,7 +63,6 @@ export default class FamilyTree extends Component {
         let dataLists =[];
         
         loadTree(0);
-        makeKey();
     
         function loadTree(isRight){
           dataLists[+isRight] = {id: 'Tree'+(+isRight), data:data};
@@ -104,12 +104,12 @@ export default class FamilyTree extends Component {
                     .attr("height", height)
                     .append("g")
                     .attr('class','content')
-                    .attr("transform", "translate(" + margin + "," + (margin+30) + ")");
+                    .attr("transform", "translate(" + margin + "," + margin + ")");
           svg.selectAll("*").remove();
           // 定义cluster(dendrogram)布局:
           var cluster = d3.cluster()
             //   .size([360, radius - 20]);  // 360指整个圆. radius-60指dendrogram周围有20个像素
-              .size([width*pn-margin*2, height-margin*3-40]);  //  [width, height]
+              .size([width*pn-margin*2, height-margin*3]);  //  [width, height]
     
           // 为cluster布局绑定数据:
           var root = d3.stratify()
@@ -357,43 +357,50 @@ export default class FamilyTree extends Component {
             .attr("d", arc)
         }
 
-        function makeKey(){
-            var keys = [
-                "alcohol","psychosis","anxiety-non-trauma","somatic disorder", "eating", 
-                "bipolar spectrum illness","depression","interpersonal trauma","PD-Cluster C-anxiety","PD-Cluster B-emotional",
-                "PD","Impulse control disorder","obesity","cardiovascular","COPD","asthma","immune-autoimmune"]
-
-            var colors = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f","#eea60d","#a9402a","#845d54","#056f1f","#475e4c"]
-
-            var group = d3.select("#treesvg")
-                        .append("g").attr('class', 'legends')
-                        .selectAll('g')
-                        .data(keys)
-                        .enter()
-                        .append('g').attr('class', 'keysgroup')
-                        .attr('transform', (d, i)=>`translate(${60 + (i%8)*130}, ${Math.floor(i/8)*20})`)
-            group
-                .append('rect')
-                .attr('width', 12)
-                .attr('height', 12)
-                .attr("rx", 4)
-                .style("fill", (d, i)=>colors[i])
-            group.append('text')
-                .attr("y", '0.9em')
-                .attr("dx", 15)
-                .style("font-size", "10px")
-                .text(d=>d);
-        }
-        
     }
 
+    makeKey(){
+      var keys = [
+          "alcohol","psychosis","anxiety-non-trauma","somatic disorder", "eating", 
+          "bipolar spectrum illness","depression","interpersonal trauma","PD-Cluster C-anxiety","PD-Cluster B-emotional",
+          "PD","Impulse control disorder","obesity","cardiovascular","COPD","asthma","immune-autoimmune"]
+
+      var colors = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f","#eea60d","#a9402a","#845d54","#056f1f","#475e4c"]
+
+      var group = d3.select("#legendsvg")
+                  .attr('height', 60)
+                  .attr('width', document.getElementById("FamilyTree").clientWidth)
+                  .append("g")
+                  .attr('class', 'legends')
+                  .selectAll('g')
+                  .data(keys)
+                  .enter()
+                  .append('g').attr('class', 'keysgroup')
+                  .attr('transform', (d, i)=>`translate(${60 + (i%8)*148}, ${Math.floor(i/8)*20})`)
+      group
+          .append('rect')
+          .attr('width', 12)
+          .attr('height', 12)
+          .attr("rx", 4)
+          .style("fill", (d, i)=>colors[i])
+      group.append('text')
+          .attr("y", '0.9em')
+          .attr("dx", 15)
+          .style("font-size", "12px")
+          .text(d=>d);
+  }
 
     render() {
         return (
+          <>
             <div id='FamilyTree' className='pane' >
                 <div className='header'>Family Tree : F{this.state.focusFamily}</div>
+                <div class='legend-div'>
+                  <svg id='legendsvg'></svg>
+                </div>
                 <div class='tree-tooltip'></div>
             </div>
+          </>
         )
     }
 }
