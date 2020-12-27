@@ -10,6 +10,7 @@ export default class DetailInfo extends Component {
         super(props)
         this.state = {
             ID: 'ID: ',
+            img:"./img/ASPHYXIA.jpg",
             data: {
                 ID: 133,
                 Sex: 'M',
@@ -17,7 +18,8 @@ export default class DetailInfo extends Component {
                 Death_Year: 1950,
                 BMI: 25,
                 Suicide_Weapon: 'Rope',
-                Death_Cause:'Acute carbon monoxide poisoning'
+                Death_Cause:'Acute carbon monoxide poisoning',
+                suicide_glyphs:''
             },
 
 
@@ -41,8 +43,12 @@ export default class DetailInfo extends Component {
         ).then((res) => {
             let data = res.data;
             console.log("detailInfo", data)
+            // if (data.maxbmi == 0) {
+            //     data.maxbmi = 22
+            // }
             this.setState({
                 ID: 'ID: ' + data.pid,
+                img: "./img/" + data.suicide_glyphs + ".jpg",
                 data: {
                     ID: data.pid,
                     Sex: data.sex,
@@ -50,7 +56,8 @@ export default class DetailInfo extends Component {
                     Death_Year: data.ddate.slice(0,4),
                     BMI: data.maxbmi.toPrecision(4), //保留四位有效数字
                     Suicide_Weapon: data.weapon,
-                    Death_Cause: data.cause_death
+                    Death_Cause: data.cause_death,
+                    
                 },
     
             })
@@ -68,11 +75,9 @@ export default class DetailInfo extends Component {
         const woman_body = '<svg preserveAspectRatio="none" id="woman" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2987" width="225" height="225"><path d="M529.218 234.374c43.289 0 81.292 28.8 93 70.475l59.925 213.319c3.427 12.199-3.685 24.867-15.884 28.294-2.02 0.567-4.107 0.855-6.205 0.855-17.951 0-33.758-11.825-38.826-29.046l-53.568-182.01h-16.407l95.16 333.52h-87.43v244.56c0 19.694-15.966 35.659-35.66 35.659-19.693 0-35.658-15.965-35.658-35.659v-244.56h-17.112v245.697c0 18.983-15.39 34.372-34.372 34.372h-0.15c-19.09-0.084-34.522-15.583-34.522-34.673V669.78h-90.078l95.242-333.519h-14.872l-51.123 180.873c-5.047 17.855-21.342 30.183-39.897 30.183-13.136 0-23.785-10.649-23.785-23.785 0-2.17 0.297-4.329 0.882-6.418l59.465-212.205c11.687-41.706 49.705-70.535 93.017-70.535h98.858zM479.962 71c40.643 0 73.59 32.967 73.59 73.634 0 40.666-32.947 73.633-73.59 73.633s-73.59-32.967-73.59-73.633c0-40.667 32.947-73.634 73.59-73.634z" fill="#333333" p-id="2988"></path></svg>'
 
         let sex_icon;
-
         if(this.state.data.Sex == 'M') {
-           
             sex_icon = man_body
-        } else {
+        } else if (this.state.data.Sex == 'F'){
             sex_icon = woman_body
         }
         document.getElementById("body").innerHTML = sex_icon
@@ -80,27 +85,46 @@ export default class DetailInfo extends Component {
         const height = document.getElementById("body").clientHeight
         const width = document.getElementById("body").clientWidth
 
+        let bmi = this.state.data.BMI
+
+        if (bmi == 0) {
+            bmi = 22
+        }
+
         //let new_width = 200;
-        let new_width = width* 0.8
-        let new_height = height*0.8
+        let new_width = width * (bmi / 22)
+        let new_height = height * 0.9
+        console.log(bmi / 22, new_width)
+
+        if (this.state.data.Sex == 'M'){
         d3.select("#man")
             .attr('width', new_width)
-            .attr("transform", `translate(${(200 - new_width) / 2},10)`)
-            .attr("height",new_height)
+            .attr("height", new_height)
+            .attr("transform", `translate(${(200 - new_width) / 2},${new_height * 0.05})`)
+            
+        } else if (this.state.data.Sex == 'F') {
+        d3.select("#woman")
+            .attr('width', new_width)
+            .attr("height", new_height)
+            .attr("transform", `translate(${(200 - new_width) / 2}, ${new_height * 0.05})`)
+        }
+      
 
+        // -----------------  rect 透明蒙板 ------------------------
+        // console.log(this.state.data.ddate)
+        // console.log(this.state.data.bdate)
+        let age = this.state.data.Death_Year - this.state.data.Birth_Year
 
-     
+        console.log(age)
 
         let svg = d3.select("#body").append('svg')
             .attr("width", width).attr("height", height)
-            .attr("transform", "translate(0,-150)");
+            .attr("transform", `translate(0, ${- (100-age) * 1.8})`);
 
         svg.append("rect")
             .attr("width", width).attr("height", 200)
             .attr("fill", "white")
             .attr("opacity", 0.35)
-
-
     }
 
 
@@ -113,11 +137,9 @@ export default class DetailInfo extends Component {
 
                 <Row justify="space-around" align="middle">
 
-                    <Col span={10} style={{ padding: 20 }}>
-                        <Row>
-                            <div id='InfoPanel'>
-                                <div id='body' style={{ margin: 20 }}> </div>
-                            </div>
+                    <Col span={10} style={{ paddingTop: 10 }}>
+                        <Row>                       
+                            <div id='body' style={{ margin: 10 }}> </div>                       
                         </Row>
 
                         {/* <Row>
@@ -146,6 +168,10 @@ export default class DetailInfo extends Component {
                                 {this.state.data.Death_Year}
                             </Descriptions.Item>
                             
+                            <Descriptions.Item label="Death Age" span={4}>
+                                {this.state.data.Death_Year - this.state.data.Birth_Year}
+                            </Descriptions.Item>
+
                             <Descriptions.Item label="Death Cause" span={4}>
                                 {this.state.data.Death_Cause}
                             </Descriptions.Item>
@@ -155,7 +181,7 @@ export default class DetailInfo extends Component {
                             </Descriptions.Item>     
 
                             <Descriptions.Item label=""  >
-                                <img width={70} style={{}} src="./img/ASPHYXIA.jpg"/>
+                                <img width={70} style={{}} src={this.state.img}/>
                             </Descriptions.Item>
                             
                             

@@ -14,12 +14,18 @@
 
 .onSelect {
     background: #E5F2FF !important; 
+    /* opacity: 0.7; */
 }
 
 .onSelect:hover {
     cursor: pointer;
+    /* opacity: 1; */
 }
 
 .ant-table-tbody > tr.onSelect:hover > td {
-    background: #E5F2FF !important; 
+    background: #cce6ff !important; 
+}
+
+.onFocus {
+    background: #cce6ff !important; 
 }

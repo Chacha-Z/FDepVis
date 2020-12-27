@@ -3,6 +3,7 @@ import './FamilyTree.css';
 import * as d3 from 'd3';
 import store from '../../redux/index';
 import axios from 'axios';
+import action from '../../redux/actions'
 
 export default class FamilyTree extends Component {
 
@@ -20,7 +21,6 @@ export default class FamilyTree extends Component {
   }
       
   uploadData() {
-    const _this = this;
     
     const focusFamily = store.getState().focusFamily
     axios.get("http://106.52.126.175/api/getFamilyTree/"+'?fid='+focusFamily
@@ -36,7 +36,7 @@ export default class FamilyTree extends Component {
   // 改进垂直树
   drawHorPro(data){
 
-        console.log('drawHorPro')
+        // console.log('drawHorPro')
         const width = document.getElementById("FamilyTree").clientWidth
         const height = document.getElementById("FamilyTree").clientHeight-45
     
@@ -94,11 +94,12 @@ export default class FamilyTree extends Component {
           var height = graphicOpt.height;
           var margin = graphicOpt.margin; // dendrogram的直径
           var pn = data.length < 60?1: data.length/60;
-          console.log(data.length, data.length/100, pn)
+        //   console.log(data.length, data.length/100, pn)
           let div = d3.select(holder);
           div.select('svg').remove()
           var svg = div
                     .append("svg")
+                    .attr('id', 'treesvg')
                     .attr("width", width*pn)
                     .attr("height", height)
                     .append("g")
@@ -119,8 +120,8 @@ export default class FamilyTree extends Component {
                   return d.parent;
               })
               (data);
-    
-          console.log(cluster(root));
+
+          cluster(root)
     
           // 节点与节点之间链接生成器
           var linksGenerator = d3.linkVertical()
@@ -133,9 +134,9 @@ export default class FamilyTree extends Component {
               .enter()
               .append('path')
               .attr("d", linksGenerator)
-              .style("fill", 'none')
+              .style("fill", 'none')                                                                                                                                                                                                                                        
               .attr("stroke", '#ccc')
-            console.log(root.links());
+            // console.log(root.links());
     
           // 为每个节点添加圆.
           var node = svg.selectAll(".node")
@@ -146,7 +147,7 @@ export default class FamilyTree extends Component {
               .attr("transform", function (d) {
                   return "translate(" + d.x +","+ d.y + ")";
               });
-            console.log(root.descendants());
+            // console.log(root.descendants()); 
     
           // 为每个节点画一或两个圆，需要对原数据进行修改，将原数据拆分成一或二长度的数组，再对数组中每个数据进行操作（画圆）
           node.selectAll('circle').data(d => {
@@ -189,6 +190,25 @@ export default class FamilyTree extends Component {
                 }
                 return `translate(${x}, ${y})`
               })
+              .on('mouseover',function(d){
+                  $tooltip.transition()
+                      .duration(100)
+                      .style('opacity', .85)
+
+                  let html = "ID: " + d.id + '<br/>';
+
+                  let coordinates = d3.mouse(container);
+
+                  $tooltip.html(html)
+                      .style('left', (coordinates[0]-20)+'px')
+                      .style('top', (coordinates[1])+'px')
+
+              }).on('mouseout',function(){
+                  
+                  $tooltip.transition()		
+                          .duration(200)		
+                          .style("opacity", 0);	
+              })
               .each(function(d){
                   let coupleholder =  d3.select(this);
                   let rad = d.group === 'individual'?3:8;
@@ -215,6 +235,8 @@ export default class FamilyTree extends Component {
               .attr("stroke", "#999")
               .style("stroke-width", .5);
 
+          let $tooltip = d3.select('.tree-tooltip')
+          let container = d3.select('#treesvg').node()
           node  // 针对自杀且有临床属性数据的，使用饼图进行绘制
               .selectAll('g.personRadial').data(d => {
                 let datainput=[];
@@ -237,12 +259,42 @@ export default class FamilyTree extends Component {
                   return `translate(${x}, ${y})`
                 })
                 .attr('cursor', 'pointer')
-                .on('mouseover',function(){
+                .on('mouseover',function(d){
                     d3.select(this.parentNode).moveToFront();
                     d3.select(this).select('g').attr('transform','scale(4)');
+
+                    $tooltip.transition()
+                        .duration(100)
+                        .style('opacity', .85)
+
+                    let html = "ID: " + d.data.id + '<br/>';
+                    let cli_d = d3.entries(d.data.clinical_data)
+                    let count = 1;              //计算不为零的临床属性的个数
+                    for (let i in cli_d){       //i为下标
+                      let key = cli_d[i].key;
+                      let value = cli_d[i].value;
+                        if(value !== 0){
+                          html += "<br/><svg width='10', height='10'><rect width='10', height='10', rx='2', style='fill:" + graphicOpt_radialC.color(key) + "'></svg> " + key + ": " + value;
+                          count++;
+                        }
+                    }
+
+                    let coordinates = d3.mouse(container);
+                    // console.log(coordinates)
+                    $tooltip.html(html)
+                        .style('left', (coordinates[0]-20)+'px')
+                        .style('top', (coordinates[1]-count*15)+'px')
+
                 }).on('mouseout',function(){
                     d3.select(this).select('g').attr('transform','scale(1)');
+                    
+                    $tooltip.transition()		
+                            .duration(200)
+                            .style("opacity", 0);	
                 })
+                .on('click', function(d){
+                    store.dispatch(action.selectPerson(d.data.id))
+                })    
                 .each(function(d){
                     // 画饼图
                     drawRadialChart({holder: d3.select(this),    //在该遍历数据及元素上绘制
@@ -313,7 +365,7 @@ export default class FamilyTree extends Component {
 
             var colors = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f","#eea60d","#a9402a","#845d54","#056f1f","#475e4c"]
 
-            var group = d3.select("#FamilyTree svg")
+            var group = d3.select("#treesvg")
                         .append("g").attr('class', 'legends')
                         .selectAll('g')
                         .data(keys)
@@ -340,6 +392,7 @@ export default class FamilyTree extends Component {
         return (
             <div id='FamilyTree' className='pane' >
                 <div className='header'>Family Tree : F{this.state.focusFamily}</div>
+                <div class='tree-tooltip'></div>
             </div>
         )
     }

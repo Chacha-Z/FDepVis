@@ -18,6 +18,13 @@ const actions = {
             id
         }
 
+    },
+    selectPerson: function(id){
+        return {
+            type: 'SELECT_PERSON',
+            id
+        }
+
     }
 }
 

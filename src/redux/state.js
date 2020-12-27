@@ -56,13 +56,9 @@ const state = {
         }
         
     ],
-    //focusFamily: 903988,
-    focusFamily: 68939,
     focusFamily: 42623,
     focusPID: 133,
     selectedFamily: [38, 149, 27251, 42623],
-  
-    
 }
 
 export default state;
