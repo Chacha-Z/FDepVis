@@ -382,19 +382,20 @@ export default class AttributesHeatmap extends Component {
     render() {
         const { data } = this.props;
         return (
+        <>
+            <div className='header' >Attributes Heatmap</div>
 
-            <div id='AttributesHeatmap' className='pane' style={{overflowX : "hidden"}}>
-                <div className='header' >Attributes Heatmap</div>
-
+            <div id='AttributesHeatmap' className='pane' >
+              
                 <div className='heatmap-tooltip' style={{ opacity: 0 }}></div>
 
                 <div id='BarChart'></div>
 
-                <div id='Heatmap'></div>
+                <div id='Heatmap' style={{overflowX : "hidden"}}></div>
                 {/* <BarChart data={data} width={1000} height={550}/> */}
 
             </div>
-
+        </>
 
         )
     }

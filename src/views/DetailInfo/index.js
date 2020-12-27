@@ -48,7 +48,7 @@ export default class DetailInfo extends Component {
             // }
             this.setState({
                 ID: 'ID: ' + data.pid,
-                img: "./img/" + data.suicide_glyphs + ".jpg",
+                img: "./img/" + data.suicide_glyphs + ".png",
                 data: {
                     ID: data.pid,
                     Sex: data.sex,
@@ -148,9 +148,9 @@ export default class DetailInfo extends Component {
 
                     </Col>
 
-                    <Col span={14}>
+                    <Col span={14} >
                     
-                        <Descriptions title={this.state.ID} style={{ padding: 10 }}>
+                        <Descriptions title={this.state.ID} style={{ padding: 10 }} >
                             <Descriptions.Item label="Sex" span={2}>
                                 {this.state.data.Sex}
                             </Descriptions.Item>
@@ -158,7 +158,6 @@ export default class DetailInfo extends Component {
                             <Descriptions.Item label="BMI" span={2}>
                                 {this.state.data.BMI}
                             </Descriptions.Item>
-
 
                             <Descriptions.Item label="Birth Year" span={2}>
                                 {this.state.data.Birth_Year}
@@ -172,6 +171,9 @@ export default class DetailInfo extends Component {
                                 {this.state.data.Death_Year - this.state.data.Birth_Year}
                             </Descriptions.Item>
 
+                    
+                            
+
                             <Descriptions.Item label="Death Cause" span={4}>
                                 {this.state.data.Death_Cause}
                             </Descriptions.Item>
@@ -181,9 +183,8 @@ export default class DetailInfo extends Component {
                             </Descriptions.Item>     
 
                             <Descriptions.Item label=""  >
-                                <img width={70} style={{}} src={this.state.img}/>
+                                <img width={50} style={{}} src={this.state.img}/>
                             </Descriptions.Item>
-                            
                             
                         </Descriptions>
 
