@@ -213,8 +213,7 @@ export default class AttributesHeatmap extends Component {
       .attr(
         "transform",
         (d, i) =>
-          `translate(${
-            i * gridSize + width * 0.085 + gridSize / 3
+          `translate(${i * gridSize + width * 0.085 + gridSize / 3
           }, ${height2})`
       ); // 直接transform <g>
 
@@ -302,7 +301,7 @@ export default class AttributesHeatmap extends Component {
           .style("left", coordinates[0] + 10 + "px")
           .style("top", coordinates[1] + 10 + "px")
           .style("display", "inline-block")
-          .html(_this.state.attrs[i] + "<br>" + "sum:" + d)
+          .html(_this.state.attrs[i] + "<br>" + "sum：" + d)
           .style("opacity", 0.9);
       })
       .on("mouseout", function (d) {
@@ -386,7 +385,7 @@ export default class AttributesHeatmap extends Component {
           .style("left", coordinates[0] + 10 + "px")
           .style("top", coordinates[1] + 150 + "px")
           .style("display", "inline-block")
-          .html(_this.state.attrs[d.col] + "<br>" + d.times)
+          .html(_this.state.attrs[d.col] + "： " + d.times)
           .style("opacity", 0.9);
         // console.log(tooltip)
       })
@@ -399,28 +398,28 @@ export default class AttributesHeatmap extends Component {
 
   render() {
     const { data } = this.props;
-return (
-  <>
-    <div className="header"> Attributes Heatmap </div>
+    return (
+      <>
+        <div className="header"> Attributes Heatmap </div>
 
-  <div id="AttributesHeatmap" className="pane">
-    <div
-      className="heatmap-tooltip"
-      style={{
-      opacity: 0,
-    }}
-  >
-    {" "}
-  </div>
-      <div id="BarChart"> </div>
-      <div
-        id="Heatmap"
-          style={{
-            overflowX: "hidden",
-          }}
-        >
-          {" "}
-        </div>{" "}
+        <div id="AttributesHeatmap" className="pane">
+          <div
+            className="heatmap-tooltip"
+            style={{
+              opacity: 0,
+            }}
+          >
+            {" "}
+          </div>
+          <div id="BarChart"> </div>
+          <div
+            id="Heatmap"
+            style={{
+              overflowX: "hidden",
+            }}
+          >
+            {" "}
+          </div>{" "}
           {/* <BarChart data={data} width={1000} height={550}/> */}
         </div>
       </>
