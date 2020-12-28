@@ -160,13 +160,17 @@ export default class FamilyTree extends Component {
               if(d.data.children){
                 datainput.push({key: 'children', data: d.data.children})
               }
+              
+              for(let i = 0; i < datainput.length; ++i){
+                datainput[i].data = datainput[i].data.filter(d=>d.clinical_data == undefined)
+              }
 
-              return datainput.filter(p => p.data.filter(pp => !pp.clinical_data )); // 只针对未自杀或自杀却没有临床属性数据的
+              return datainput; // 只针对未自杀或自杀却没有临床属性数据的
             }).enter()
               .append('g')
               .attr('transform',d=>{
-                let rad = d.key === 'individual'?3:8;
-                let par = d.key === 'individual'?2.8:2.2;
+                let rad = d.key === 'ind'?3:8;
+                let par = d.key === 'ind'?2.8:2.2;
                 let x = 0, y = 0;
                 if(d.key === 'spouse'){
                     x = rad*par;
@@ -242,27 +246,34 @@ export default class FamilyTree extends Component {
               .selectAll('g.personRadial').data(d => {
                 let datainput=[];
                 if (d.data.group === "individual")
-                    datainput = [{key: 'ind', data: d.data}];
+                    datainput = [{key: 'ind', data: [d.data]}];
                 else
-                    datainput = [{key: 'self', data: d.data}, {key: 'spouse', data: d.data.spouse[0]}];
-      
-                return datainput.filter(p => p.data.clinical_data );
+                    datainput = [{key: 'self', data: [d.data]}, {key: 'spouse', data: d.data.spouse}];
+                
+                for(let i = 0; i < datainput.length; ++i){
+                  datainput[i].data = datainput[i].data.filter(d=>d.clinical_data !== undefined)
+                }
+                return datainput // 只针对未自杀或自杀却没有临床属性数据的
               }).enter()
                 .append('g')
                 .attr('class','personRadial')
                 .attr('transform',d=>{
-                  let rad = d.key === 'individual'?3:8;
-                  let par = d.group === 'individual'?2.8:2.2;
+                  let rad = 8;
+                  let par = 2.2;
                   let x = 0, y = 0; 
                   if(d.key === 'spouse'){
                     x = rad*par;
                   }
                   return `translate(${x}, ${y})`
                 })
+                .selectAll('g')
+                .data(d => d.data)
+                .enter()
+                .append('g')
                 .attr('cursor', 'pointer')
-                .attr('transform', d=>d.data.id == focusPerson? 'scale(2)': 'scale(1)')
+                .attr('transform', d=>d.id == focusPerson? 'scale(2)': 'scale(1)')
                 .on('mouseover',function(d){
-                    if(d.data.id != focusPerson){
+                    if(d.id != focusPerson){
                       d3.select(this.parentNode).moveToFront();
                       d3.select(this).select('g').attr('transform','scale(4)');
                     }else{
@@ -273,8 +284,8 @@ export default class FamilyTree extends Component {
                         .duration(100)
                         .style('opacity', .85)
 
-                    let html = "ID: " + d.data.id + '<br/>';
-                    let cli_d = d3.entries(d.data.clinical_data)
+                    let html = "ID: " + d.id + '<br/>';
+                    let cli_d = d3.entries(d.clinical_data)
                     let count = 1;              //计算不为零的临床属性的个数
                     for (let i in cli_d){       //i为下标
                       let key = cli_d[i].key;
@@ -299,12 +310,12 @@ export default class FamilyTree extends Component {
                             .style("opacity", 0);	
                 })
                 .on('click', function(d){
-                    store.dispatch(action.selectPerson(d.data.id))
+                    store.dispatch(action.selectPerson(d.id))
                 })
                 .each(function(d){
                     // 画饼图
                     drawRadialChart({holder: d3.select(this),    //在该遍历数据及元素上绘制
-                                     d: d.data,
+                                     d: d,
                                      graphicopt: graphicOpt_radialC})
                 })
         }
