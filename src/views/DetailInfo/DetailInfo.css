@@ -3,6 +3,10 @@
     /* background-color: blueviolet; */
 }
 
+#body{
+    margin : calc(8%)
+}
+
 .ant-descriptions-item-label {
     font-weight: normal;
     font-size: 15px;

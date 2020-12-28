@@ -30,6 +30,7 @@ export default class DetailInfo extends Component {
 
 
     componentDidMount() {
+        
         store.subscribe(() => {
             this.uploadData()
         })
@@ -118,11 +119,11 @@ export default class DetailInfo extends Component {
         console.log(age)
 
         let svg = d3.select("#body").append('svg')
-            .attr("width", width).attr("height", height)
+            .attr("width", width*1.2).attr("height", height)
             .attr("transform", `translate(0, ${- (100-age) * 1.8})`);
 
         svg.append("rect")
-            .attr("width", width).attr("height", 200)
+            .attr("width", width*1.2).attr("height", 200)
             .attr("fill", "white")
             .attr("opacity", 0.35)
     }
@@ -139,7 +140,7 @@ export default class DetailInfo extends Component {
 
                     <Col span={10} style={{ paddingTop: 10 }}>
                         <Row>                       
-                            <div id='body' style={{ margin: 10 }}> </div>                       
+                            <div id='body' > </div>                       
                         </Row>
 
                         {/* <Row>
