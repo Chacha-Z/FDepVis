@@ -14,12 +14,13 @@ export default class FamilyTree extends Component {
     }
   }
   componentDidMount(){
+    this.makeKey()
     store.subscribe(()=>{
         this.uploadData()
     })
     this.uploadData();
   }
-      
+  
   uploadData() {
     
     const focusFamily = store.getState().focusFamily
@@ -38,7 +39,7 @@ export default class FamilyTree extends Component {
 
         // console.log('drawHorPro')
         const width = document.getElementById("FamilyTree").clientWidth
-        const height = document.getElementById("FamilyTree").clientHeight-45
+        const height = document.getElementById("FamilyTree").clientHeight-45-60
     
         var graphicOpt = {
           width: width,
@@ -62,7 +63,6 @@ export default class FamilyTree extends Component {
         let dataLists =[];
         
         loadTree(0);
-        makeKey();
     
         function loadTree(isRight){
           dataLists[+isRight] = {id: 'Tree'+(+isRight), data:data};
@@ -104,12 +104,12 @@ export default class FamilyTree extends Component {
                     .attr("height", height)
                     .append("g")
                     .attr('class','content')
-                    .attr("transform", "translate(" + margin + "," + (margin+30) + ")");
+                    .attr("transform", "translate(" + margin + "," + margin + ")");
           svg.selectAll("*").remove();
           // 定义cluster(dendrogram)布局:
           var cluster = d3.cluster()
             //   .size([360, radius - 20]);  // 360指整个圆. radius-60指dendrogram周围有20个像素
-              .size([width*pn-margin*2, height-margin*3-40]);  //  [width, height]
+              .size([width*pn-margin*2, height-margin*3]);  //  [width, height]
     
           // 为cluster布局绑定数据:
           var root = d3.stratify()
@@ -149,6 +149,7 @@ export default class FamilyTree extends Component {
               });
             // console.log(root.descendants()); 
     
+          let focusPerson = store.getState().focusPID
           // 为每个节点画一或两个圆，需要对原数据进行修改，将原数据拆分成一或二长度的数组，再对数组中每个数据进行操作（画圆）
           node.selectAll('circle').data(d => {
               let datainput=[];
@@ -159,13 +160,17 @@ export default class FamilyTree extends Component {
               if(d.data.children){
                 datainput.push({key: 'children', data: d.data.children})
               }
+              
+              for(let i = 0; i < datainput.length; ++i){
+                datainput[i].data = datainput[i].data.filter(d=>d.clinical_data == undefined)
+              }
 
-              return datainput.filter(p => p.data.filter(pp => !pp.clinical_data )); // 只针对未自杀或自杀却没有临床属性数据的
+              return datainput; // 只针对未自杀或自杀却没有临床属性数据的
             }).enter()
               .append('g')
               .attr('transform',d=>{
-                let rad = d.key === 'individual'?3:8;
-                let par = d.key === 'individual'?2.8:2.2;
+                let rad = d.key === 'ind'?3:8;
+                let par = d.key === 'ind'?2.8:2.2;
                 let x = 0, y = 0;
                 if(d.key === 'spouse'){
                     x = rad*par;
@@ -201,7 +206,7 @@ export default class FamilyTree extends Component {
 
                   $tooltip.html(html)
                       .style('left', (coordinates[0]-20)+'px')
-                      .style('top', (coordinates[1])+'px')
+                      .style('top', (coordinates[1]-30)+'px')
 
               }).on('mouseout',function(){
                   
@@ -236,39 +241,51 @@ export default class FamilyTree extends Component {
               .style("stroke-width", .5);
 
           let $tooltip = d3.select('.tree-tooltip')
-          let container = d3.select('#treesvg').node()
+          let container = d3.select('#FamilyTree').node()
           node  // 针对自杀且有临床属性数据的，使用饼图进行绘制
               .selectAll('g.personRadial').data(d => {
                 let datainput=[];
                 if (d.data.group === "individual")
-                    datainput = [{key: 'ind', data: d.data}];
+                    datainput = [{key: 'ind', data: [d.data]}];
                 else
-                    datainput = [{key: 'self', data: d.data}, {key: 'spouse', data: d.data.spouse[0]}];
-      
-                return datainput.filter(p => p.data.clinical_data );
+                    datainput = [{key: 'self', data: [d.data]}, {key: 'spouse', data: d.data.spouse}];
+                
+                for(let i = 0; i < datainput.length; ++i){
+                  datainput[i].data = datainput[i].data.filter(d=>d.clinical_data !== undefined)
+                }
+                return datainput // 只针对未自杀或自杀却没有临床属性数据的
               }).enter()
                 .append('g')
                 .attr('class','personRadial')
                 .attr('transform',d=>{
-                  let rad = d.key === 'individual'?3:8;
-                  let par = d.group === 'individual'?2.8:2.2;
+                  let rad = 8;
+                  let par = 2.2;
                   let x = 0, y = 0; 
                   if(d.key === 'spouse'){
                     x = rad*par;
                   }
                   return `translate(${x}, ${y})`
                 })
+                .selectAll('g')
+                .data(d => d.data)
+                .enter()
+                .append('g')
                 .attr('cursor', 'pointer')
+                .attr('transform', d=>d.id == focusPerson? 'scale(2)': 'scale(1)')
                 .on('mouseover',function(d){
-                    d3.select(this.parentNode).moveToFront();
-                    d3.select(this).select('g').attr('transform','scale(4)');
+                    if(d.id != focusPerson){
+                      d3.select(this.parentNode).moveToFront();
+                      d3.select(this).select('g').attr('transform','scale(4)');
+                    }else{
+                      d3.select(this).select('g').attr('transform','scale(2)');
+                    }
 
                     $tooltip.transition()
                         .duration(100)
                         .style('opacity', .85)
 
-                    let html = "ID: " + d.data.id + '<br/>';
-                    let cli_d = d3.entries(d.data.clinical_data)
+                    let html = "ID: " + d.id + '<br/>';
+                    let cli_d = d3.entries(d.clinical_data)
                     let count = 1;              //计算不为零的临床属性的个数
                     for (let i in cli_d){       //i为下标
                       let key = cli_d[i].key;
@@ -283,7 +300,7 @@ export default class FamilyTree extends Component {
                     // console.log(coordinates)
                     $tooltip.html(html)
                         .style('left', (coordinates[0]-20)+'px')
-                        .style('top', (coordinates[1]-count*15)+'px')
+                        .style('top', (coordinates[1]-count*15-30)+'px')
 
                 }).on('mouseout',function(){
                     d3.select(this).select('g').attr('transform','scale(1)');
@@ -293,12 +310,12 @@ export default class FamilyTree extends Component {
                             .style("opacity", 0);	
                 })
                 .on('click', function(d){
-                    store.dispatch(action.selectPerson(d.data.id))
-                })    
+                    store.dispatch(action.selectPerson(d.id))
+                })
                 .each(function(d){
                     // 画饼图
                     drawRadialChart({holder: d3.select(this),    //在该遍历数据及元素上绘制
-                                     d: d.data,
+                                     d: d,
                                      graphicopt: graphicOpt_radialC})
                 })
         }
@@ -357,43 +374,52 @@ export default class FamilyTree extends Component {
             .attr("d", arc)
         }
 
-        function makeKey(){
-            var keys = [
-                "alcohol","psychosis","anxiety-non-trauma","somatic disorder", "eating", 
-                "bipolar spectrum illness","depression","interpersonal trauma","PD-Cluster C-anxiety","PD-Cluster B-emotional",
-                "PD","Impulse control disorder","obesity","cardiovascular","COPD","asthma","immune-autoimmune"]
-
-            var colors = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f","#eea60d","#a9402a","#845d54","#056f1f","#475e4c"]
-
-            var group = d3.select("#treesvg")
-                        .append("g").attr('class', 'legends')
-                        .selectAll('g')
-                        .data(keys)
-                        .enter()
-                        .append('g').attr('class', 'keysgroup')
-                        .attr('transform', (d, i)=>`translate(${60 + (i%8)*130}, ${Math.floor(i/8)*20})`)
-            group
-                .append('rect')
-                .attr('width', 12)
-                .attr('height', 12)
-                .attr("rx", 4)
-                .style("fill", (d, i)=>colors[i])
-            group.append('text')
-                .attr("y", '0.9em')
-                .attr("dx", 15)
-                .style("font-size", "10px")
-                .text(d=>d);
-        }
-        
     }
 
+    makeKey(){
+      var margin_left = 60;
+      var width = document.getElementById("FamilyTree").clientWidth-margin_left
+      var keys = [
+          "alcohol","psychosis","anxiety-non-trauma","somatic disorder", "eating", 
+          "bipolar spectrum illness","depression","interpersonal trauma","PD-Cluster C-anxiety","PD-Cluster B-emotional",
+          "PD","Impulse control disorder","obesity","cardiovascular","COPD","asthma","immune-autoimmune"]
+
+      var colors = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f","#eea60d","#a9402a","#845d54","#056f1f","#475e4c"]
+
+      var group = d3.select("#legendsvg")
+                  .attr('height', 60)
+                  .attr('width', width)
+                  .append("g")
+                  .attr('class', 'legends')
+                  .selectAll('g')
+                  .data(keys)
+                  .enter()
+                  .append('g').attr('class', 'keysgroup')
+                  .attr('transform', (d, i)=>`translate(${60 + (i%8)*148}, ${Math.floor(i/8)*20})`)
+      group
+          .append('rect')
+          .attr('width', 12)
+          .attr('height', 12)
+          .attr("rx", 4)
+          .style("fill", (d, i)=>colors[i])
+      group.append('text')
+          .attr("y", '0.9em')
+          .attr("dx", 15)
+          .style("font-size", "12px")
+          .text(d=>d);
+  }
 
     render() {
         return (
+          <>
             <div id='FamilyTree' className='pane' >
                 <div className='header'>Family Tree : F{this.state.focusFamily}</div>
+                <div class='legend-div'>
+                  <svg id='legendsvg'></svg>
+                </div>
                 <div class='tree-tooltip'></div>
             </div>
+          </>
         )
     }
 }
