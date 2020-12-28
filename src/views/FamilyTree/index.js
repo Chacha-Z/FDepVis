@@ -149,6 +149,7 @@ export default class FamilyTree extends Component {
               });
             // console.log(root.descendants()); 
     
+          let focusPerson = store.getState().focusPID
           // 为每个节点画一或两个圆，需要对原数据进行修改，将原数据拆分成一或二长度的数组，再对数组中每个数据进行操作（画圆）
           node.selectAll('circle').data(d => {
               let datainput=[];
@@ -201,7 +202,7 @@ export default class FamilyTree extends Component {
 
                   $tooltip.html(html)
                       .style('left', (coordinates[0]-20)+'px')
-                      .style('top', (coordinates[1]+60)+'px')
+                      .style('top', (coordinates[1]-30)+'px')
 
               }).on('mouseout',function(){
                   
@@ -236,7 +237,7 @@ export default class FamilyTree extends Component {
               .style("stroke-width", .5);
 
           let $tooltip = d3.select('.tree-tooltip')
-          let container = d3.select('#treesvg').node()
+          let container = d3.select('#FamilyTree').node()
           node  // 针对自杀且有临床属性数据的，使用饼图进行绘制
               .selectAll('g.personRadial').data(d => {
                 let datainput=[];
@@ -259,9 +260,14 @@ export default class FamilyTree extends Component {
                   return `translate(${x}, ${y})`
                 })
                 .attr('cursor', 'pointer')
+                .attr('transform', d=>d.data.id == focusPerson? 'scale(2)': 'scale(1)')
                 .on('mouseover',function(d){
-                    d3.select(this.parentNode).moveToFront();
-                    d3.select(this).select('g').attr('transform','scale(4)');
+                    if(d.data.id != focusPerson){
+                      d3.select(this.parentNode).moveToFront();
+                      d3.select(this).select('g').attr('transform','scale(4)');
+                    }else{
+                      d3.select(this).select('g').attr('transform','scale(2)');
+                    }
 
                     $tooltip.transition()
                         .duration(100)
@@ -283,7 +289,7 @@ export default class FamilyTree extends Component {
                     // console.log(coordinates)
                     $tooltip.html(html)
                         .style('left', (coordinates[0]-20)+'px')
-                        .style('top', (coordinates[1]-count*15+60)+'px')
+                        .style('top', (coordinates[1]-count*15-30)+'px')
 
                 }).on('mouseout',function(){
                     d3.select(this).select('g').attr('transform','scale(1)');
@@ -294,7 +300,7 @@ export default class FamilyTree extends Component {
                 })
                 .on('click', function(d){
                     store.dispatch(action.selectPerson(d.data.id))
-                })    
+                })
                 .each(function(d){
                     // 画饼图
                     drawRadialChart({holder: d3.select(this),    //在该遍历数据及元素上绘制
@@ -360,6 +366,8 @@ export default class FamilyTree extends Component {
     }
 
     makeKey(){
+      var margin_left = 60;
+      var width = document.getElementById("FamilyTree").clientWidth-margin_left
       var keys = [
           "alcohol","psychosis","anxiety-non-trauma","somatic disorder", "eating", 
           "bipolar spectrum illness","depression","interpersonal trauma","PD-Cluster C-anxiety","PD-Cluster B-emotional",
@@ -369,7 +377,7 @@ export default class FamilyTree extends Component {
 
       var group = d3.select("#legendsvg")
                   .attr('height', 60)
-                  .attr('width', document.getElementById("FamilyTree").clientWidth)
+                  .attr('width', width)
                   .append("g")
                   .attr('class', 'legends')
                   .selectAll('g')

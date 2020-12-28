@@ -170,9 +170,10 @@ export default class ScatterPlot extends Component {
 
         let fig = svg.append('g')
             .attr('transform', 'translate(' + 10 + ',' + 10 + ')')
+        let focusPerson = store.getState().focusPID
+        // console.log('focusPerson', focusPerson)
 
         let $tooltip = d3.select('.plot-tooltip')
-        // console.log(points)
         fig.append('g') // 输出点
             .selectAll('circle')
             // .attr('class', 'points')
@@ -180,8 +181,8 @@ export default class ScatterPlot extends Component {
             .enter()
             .append('circle')
             .attr('cursor', 'pointer')
-            // .on('mouseover', tip.show)
-            // .on('mouseout', tip.hide)
+            .attr('stroke', d=>d.pid == focusPerson? 'black': z(d.fid))
+            .attr('stroke-width', '1')
             .attr('fill', function(d) {
                 return z(d.fid)
             })
