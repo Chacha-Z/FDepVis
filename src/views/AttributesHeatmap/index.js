@@ -5,6 +5,7 @@ import * as d3 from "d3";
 import './AttributesHeatmap.css';
 import store from '../../redux/index';
 import axios from 'axios';
+import action from '../../redux/actions'
 
 export default class AttributesHeatmap extends Component {
 
@@ -288,7 +289,11 @@ export default class AttributesHeatmap extends Component {
         return i * gridSize;
       })
       .attr("font-size", "8.5pt")
+      .attr('cursor', 'pointer')
       .attr("fill", d=> d == focusPerson?"#2171b5": "#595959")
+      .on('click', (d)=>{
+          store.dispatch(action.selectPerson(d))
+      })
 
 
 
@@ -307,7 +312,6 @@ export default class AttributesHeatmap extends Component {
     const cardsEnter = cards.append("rect")
       .attr("x", function (d, i) {
         return width * 0.87 / 17 * d.col + 2
-        return width * 0.038 + (d.col) * gridSize;
       })
       .attr("y", function (d) {
         return (d.row) * gridSize;
@@ -321,7 +325,10 @@ export default class AttributesHeatmap extends Component {
       .style("fill", function (d) {
         return color(d.times);
       })
-
+      .attr('cursor', 'pointer')
+      .on('click', (d)=>{
+          store.dispatch(action.selectPerson(this.state.names[d.row]))
+      })
       .on("mousemove", function (d, i) {
         let coordinates = d3.mouse(container2);
         // let coordinates = this.setMouse(d3.mouse(this))
