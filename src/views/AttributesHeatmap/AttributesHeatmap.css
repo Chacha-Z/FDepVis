@@ -24,5 +24,9 @@
     overflow: auto;
   }
 
+  .attr{
+      height: calc(100% - 40)
+  }
+
 
 /* ::-webkit-scrollbar {display:none} */

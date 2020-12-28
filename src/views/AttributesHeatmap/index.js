@@ -385,7 +385,7 @@ export default class AttributesHeatmap extends Component {
         <>
             <div className='header' >Attributes Heatmap</div>
 
-            <div id='AttributesHeatmap' className='pane' >
+            <div id='AttributesHeatmap' className='attr'>
               
                 <div className='heatmap-tooltip' style={{ opacity: 0 }}></div>
 
