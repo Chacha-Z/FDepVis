@@ -52,7 +52,7 @@ export default class FamilyTree extends Component {
             height:16,
             color: d3.scaleOrdinal()
                 // .range(['#8dd3c7','#ffffb3','#bebada','#fb8072','#80b1d3','#fdb462','#b3de69','#fccde5','#d9d9d9','#bc80bd','#ccebc5','#ffed6f', "silver", "teal", "black", "yellow"])
-                .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f","#eea60d","#a9402a","#845d54","#056f1f","#475e4c"])
+                .range(["#004986","#ffffb3","#bebada","#fb8072","#80b1d3","#f19ec2","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f","#eea60d","#a9402a","#845d54","#056f1f","#475e4c"])
         }
     
         d3.selection.prototype.moveToFront = function() {
@@ -107,9 +107,9 @@ export default class FamilyTree extends Component {
                     .attr("transform", "translate(" + margin + "," + margin + ")");
           svg.selectAll("*").remove();
           // 定义cluster(dendrogram)布局:
-          var cluster = d3.cluster()
+          var cluster = d3.tree()
             //   .size([360, radius - 20]);  // 360指整个圆. radius-60指dendrogram周围有20个像素
-              .size([width*pn-margin*2, height-margin*3]);  //  [width, height]
+              .size([width*pn-margin*2, height-margin*2]);  //  [width, height]
     
           // 为cluster布局绑定数据:
           var root = d3.stratify()
@@ -234,6 +234,7 @@ export default class FamilyTree extends Component {
                       return "black"
                   } else {
                       return "#69b3a2"
+                      // return "#285880"
                   }
     
               })
@@ -384,7 +385,7 @@ export default class FamilyTree extends Component {
           "bipolar spectrum illness","depression","interpersonal trauma","PD-Cluster C-anxiety","PD-Cluster B-emotional",
           "PD","Impulse control disorder","obesity","cardiovascular","COPD","asthma","immune-autoimmune"]
 
-      var colors = ["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f","#eea60d","#a9402a","#845d54","#056f1f","#475e4c"]
+      var colors = ["#004986","#ffffb3","#bebada","#fb8072","#80b1d3","#f19ec2","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f","#eea60d","#a9402a","#845d54","#056f1f","#475e4c"]
 
       var group = d3.select("#legendsvg")
                   .attr('height', 60)
