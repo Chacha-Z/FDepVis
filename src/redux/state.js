@@ -17,43 +17,43 @@ const state = {
             ID: 27251,
             people: 404,
             SNum: 39
-        },
-        {
-            key: 42623,
-            ID: 42623,
-            people: 81,
-            SNum: 10
-        },
-        {
-            key: 68939,
-            ID: 68939,
-            people: 244,
-            SNum: 23
-        },
-        {
-            key: 176860,
-            ID: 176860,
-            people: 426,
-            SNum: 44
-        },
-        {
-            key: 603481,
-            ID: 603481,
-            people: 181,
-            SNum: 19
-        },
-        {
-            key: 791533,
-            ID: 791533,
-            people: 114,
-            SNum: 10
-        },
-        {
-            key: 903988,
-            ID: 903988,
-            people: 58,
-            SNum: 5
-        }
+    },
+    {
+        key: 42623,
+        ID: 42623,
+        people: 81,
+        SNum: 10
+    },
+    {
+        key: 68939,
+        ID: 68939,
+        people: 244,
+        SNum: 23
+    },
+    {
+        key: 176860,
+        ID: 176860,
+        people: 426,
+        SNum: 44
+    },
+    {
+        key: 603481,
+        ID: 603481,
+        people: 181,
+        SNum: 19
+    },
+    {
+        key: 791533,
+        ID: 791533,
+        people: 114,
+        SNum: 10
+    },
+    {
+        key: 903988,
+        ID: 903988,
+        people: 58,
+        SNum: 5
+    }
         
     ],
     focusFamily: 42623,

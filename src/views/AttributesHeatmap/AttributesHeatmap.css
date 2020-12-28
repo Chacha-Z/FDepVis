@@ -5,7 +5,7 @@
 }
 
 #AttributesHeatmap {
-    height: 100%;
+    height: calc(100% - 40px);
     background-color: white;
     overflow-x: hidden;
     overflow-y: auto;
