@@ -274,6 +274,7 @@ export default class AttributesHeatmap extends Component {
 
     //圆形+字母 legends
 
+    let focusPerson = store.getState().focusPID
     const nameLabels = svg.append('g')
       .attr('class', 'nameLabel')
       .attr("transform", "translate(5, " + (5 + gridSize / 2) + ")")
@@ -287,8 +288,7 @@ export default class AttributesHeatmap extends Component {
         return i * gridSize;
       })
       .attr("font-size", "8.5pt")
-      //.attr("fill", "#aaa")
-      .attr("fill", "#595959")
+      .attr("fill", d=> d == focusPerson?"#2171b5": "#595959")
 
 
 
@@ -302,7 +302,7 @@ export default class AttributesHeatmap extends Component {
     //console.log(cards)
 
     //  .enter().append("rect")
-
+    console.log(this.state.values)
 
     const cardsEnter = cards.append("rect")
       .attr("x", function (d, i) {
@@ -316,6 +316,8 @@ export default class AttributesHeatmap extends Component {
       .attr("ry", 4)
       .attr("width", gridSize - 5)
       .attr("height", gridSize - 5)
+      .attr('stroke', d=>this.state.names[d.row] == focusPerson? 'black': 'none')
+      .attr('stroke-width', d=> d.times == 0? '0':'0.3')
       .style("fill", function (d) {
         return color(d.times);
       })
