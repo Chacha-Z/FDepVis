@@ -181,8 +181,8 @@ export default class ScatterPlot extends Component {
       .enter()
       .append('circle')
       .attr('cursor', 'pointer')
-      .attr('stroke', d => d.pid == focusPerson ? 'black' : z(d.fid))
-      .attr('stroke-width', '1')
+      .attr('stroke', d => d.pid == focusPerson ? 'black' : 'none')
+      .attr('stroke-width', '2.5')
       .attr('fill', function (d) {
         return z(d.fid)
       })
